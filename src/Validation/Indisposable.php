@@ -18,13 +18,15 @@ class Indisposable
      */
     public function __construct()
     {
-        $path = base_path('storage/framework/disposable_domains.json');
+        if (empty(static::$domains)) {
+            $path = base_path('storage/framework/disposable_domains.json');
 
-        // If the list hasn't been fetched yet, fall back to defaults.
-        // This ensures developers are up and running right away.
-        static::$domains = json_decode(file_get_contents(
-            file_exists($path) ? $path : (__DIR__ . '/../../domains.json')
-        ), true);
+            // If the list hasn't been fetched yet, fall back to defaults.
+            // This ensures developers are up and running right away.
+            static::$domains = json_decode(file_get_contents(
+                file_exists($path) ? $path : (__DIR__ . '/../../domains.json')
+            ), true);
+        }
     }
 
     /**
