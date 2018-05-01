@@ -4,7 +4,7 @@
 [![Total Downloads](https://poser.pugx.org/propaganistas/laravel-disposable-email/downloads)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
 [![License](https://poser.pugx.org/propaganistas/laravel-disposable-email/license)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
 
-**Compatability:** Laravel 5.4+
+**Compatibility:** Laravel 5.4+
 
 Adds a validator to Laravel for checking whether a given email address isn't originating from disposable email services such as `Mailinator`, `Guerillamail`, ...
 Uses the disposable domains blacklist from [andreis/disposable-email-domains](https://github.com/andreis/disposable-email-domains).
