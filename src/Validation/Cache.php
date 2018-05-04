@@ -14,6 +14,13 @@ class Cache {
     protected static $sourceUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
 
     /**
+     * Framework cache key.
+     *
+     * @var string
+     */
+    protected static $cacheKey = 'laravel-disposable-email.cache';
+
+    /**
      * Fetch new data from the source URI.
      *
      * @return string
@@ -28,7 +35,16 @@ class Cache {
      * @param $data
      */
     public static function store($data) {
-        FrameworkCache::put('laravel-disposable-email.cache', $data, 60 * 24 * 7);
+        FrameworkCache::put(static::$cacheKey, $data, 60 * 24 * 7);
+    }
+
+    /**
+     * Fetches the current disposable email cache.
+     *
+     * @return mixed
+     */
+    public static function fetch() {
+        return FrameworkCache::get(static::$cacheKey, []);
     }
 
 }
