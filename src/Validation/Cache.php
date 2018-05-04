@@ -30,6 +30,15 @@ class Cache {
     }
 
     /**
+     * Fetches the domains source from the local package source.
+     *
+     * @return bool|string
+     */
+    public static function fetchLocalSource() {
+        return file_get_contents(__DIR__.'/../../domains.json');
+    }
+
+    /**
      * Stores the given data in the framework Cache.
      *
      * @param $data
