@@ -3,6 +3,7 @@
 namespace Propaganistas\LaravelDisposableEmail\Console;
 
 use Illuminate\Console\Command;
+use Propaganistas\LaravelDisposableEmail\Validation\Cache;
 
 class CacheDisposableDomainsCommand extends Command
 {
@@ -21,20 +22,13 @@ class CacheDisposableDomainsCommand extends Command
     protected $description = 'Caches the latest disposable email domains list';
 
     /**
-     * The JSON source URL.
-     *
-     * @var string
-     */
-    public static $sourceUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
-
-    /**
      * Execute the console command.
      *
      * @return void
      */
     public function handle()
     {
-        if (! $data = $this->fetchFromSource()) {
+        if (! $data = Cache::fetchSource()) {
             $this->error('Couldn\'t reach the list source. Aborting.');
 
             return;
@@ -46,34 +40,14 @@ class CacheDisposableDomainsCommand extends Command
             return;
         }
 
-        if (! $this->storeData($data)) {
-            $this->error('Cannot write the fetched list to [storage/framework/disposable_domains.json]. Aborting.');
-
-            return;
+        try {
+            Cache::store($data);
+        } catch (\Exception $exception) {
+            $this->error($exception->getMessage());
+            $this->error('Cannot write the fetched list to the cache. Aborting.');
         }
 
         $this->info('Disposable domains list updated successfully.');
-    }
-
-    /**
-     * Fetch new data from the source URL.
-     *
-     * @return bool
-     */
-    protected function fetchFromSource()
-    {
-        return file_get_contents(static::$sourceUrl);
-    }
-
-    /**
-     * Writes data to the disk.
-     *
-     * @param string $data
-     * @return bool
-     */
-    protected function storeData($data)
-    {
-        return file_put_contents(base_path('storage/framework/disposable_domains.json'), $data);
     }
 
     /**
