@@ -41,7 +41,7 @@ class Cache {
     /**
      * Stores the given data in the framework Cache.
      *
-     * @param $data
+     * @param array $data
      */
     public static function store($data) {
         FrameworkCache::put(static::$cacheKey, $data, 60 * 24 * 7);
