@@ -28,7 +28,7 @@ class CacheDisposableDomainsCommand extends Command
      */
     public function handle()
     {
-        if (! $data = Cache::fetchSource()) {
+        if (! $data = Cache::fetchRemoteSource()) {
             $this->error('Couldn\'t reach the list source. Aborting.');
 
             return;

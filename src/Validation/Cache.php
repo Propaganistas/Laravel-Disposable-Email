@@ -25,7 +25,7 @@ class Cache {
      *
      * @return string
      */
-    public static function fetchSource() {
+    public static function fetchRemoteSource() {
         return file_get_contents(static::$sourceUrl);
     }
 
