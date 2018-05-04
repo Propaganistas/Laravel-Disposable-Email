@@ -10,4 +10,9 @@ class DisposableEmailTest extends TestCase {
         $this->assertNotEmpty(Cache::fetchSource());
     }
 
+    /** @test */
+    public function we_should_be_able_to_fetch_domains_from_the_local_fallback_source() {
+        $this->assertNotEmpty(Cache::fetchLocalSource());
+    }
+
 }
