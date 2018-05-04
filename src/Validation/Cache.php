@@ -27,7 +27,7 @@ class Cache {
      *
      * @param $data
      */
-    public function store($data) {
+    public static function store($data) {
         FrameworkCache::put('laravel-disposable-email.cache', $data, 60 * 24 * 7);
     }
 
