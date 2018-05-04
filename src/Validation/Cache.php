@@ -11,7 +11,7 @@ class Cache {
      *
      * @var string
      */
-    public static $sourceUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
+    protected static $sourceUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
 
     /**
      * Fetch new data from the source URI.
