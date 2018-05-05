@@ -2,7 +2,6 @@
 
 use Orchestra\Testbench\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
-use Illuminate\Support\Facades\Cache as FrameworkCache;
 
 class DisposableEmailCacheTest extends TestCase {
 
