@@ -22,4 +22,13 @@ class DisposableEmailTest extends TestCase {
         $this->assertArrayHasKey(0, Cache::fetch());
     }
 
+    /** @test */
+    public function the_cache_update_method_should_override_old_data() {
+        $testDomain = 'google.com';
+        Cache::store([$testDomain]);
+        Cache::update();
+
+        $this->assertNotContains($testDomain, Cache::fetch());
+    }
+
 }
