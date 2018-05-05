@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Orchestra\Testbench\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
 
 class DisposableEmailTest extends TestCase {
