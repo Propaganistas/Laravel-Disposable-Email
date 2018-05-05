@@ -93,4 +93,20 @@ class Cache {
         static::store($source);
     }
 
+    /**
+     * Fetches the current Disposable Email cache.
+     * If no cache is available, we'll update the cache and try again.
+     *
+     * @return array
+     */
+    public static function fetchOrUpdate() {
+        if ($output = static::fetch()) {
+            return $output;
+        }
+
+        static::update();
+
+        return static::fetch();
+    }
+
 }
