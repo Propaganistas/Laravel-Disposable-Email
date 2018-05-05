@@ -26,7 +26,7 @@ class Indisposable {
      * @param $email
      * @return bool
      */
-    public static function isDisposable($email) {
+    public function isDisposable($email) {
         // Parse the email to its top level domain.
         preg_match("/[^\.\/]+\.[^\.\/]+$/", Str::after($email, '@'), $domain);
 
