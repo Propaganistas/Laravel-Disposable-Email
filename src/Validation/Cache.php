@@ -39,6 +39,16 @@ class Cache {
     }
 
     /**
+     * Decodes the given JSON source string.
+     *
+     * @param $source
+     * @return mixed
+     */
+    public static function decodeSource($source) {
+        return json_decode($source, true);
+    }
+
+    /**
      * Stores the given data in the framework Cache.
      *
      * @param array $data
