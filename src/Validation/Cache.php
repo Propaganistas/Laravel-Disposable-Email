@@ -51,9 +51,13 @@ class Cache {
     /**
      * Stores the given data in the framework Cache.
      *
-     * @param array $data
+     * @param array|string $data
      */
     public static function store($data) {
+        if (is_string($data)) {
+            $data = static::decodeSource($data);
+        }
+
         FrameworkCache::put(static::$cacheKey, $data, 60 * 24 * 7);
     }
 
