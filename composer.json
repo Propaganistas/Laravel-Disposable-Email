@@ -23,7 +23,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Propaganistas\\LaravelDisposableEmail\\": "src/"
+            "Propaganistas\\LaravelDisposableEmail\\": "src/",
+            "Propaganistas\\LaravelDisposableEmail\\Tests\\": "tests/"
         }
     },
     "extra": {
