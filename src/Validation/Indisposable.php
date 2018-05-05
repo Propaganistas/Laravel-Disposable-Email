@@ -3,7 +3,6 @@
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
 use Illuminate\Support\Str;
-use Propaganistas\LaravelDisposableEmail\Validation\Cache;
 
 class Indisposable {
 
