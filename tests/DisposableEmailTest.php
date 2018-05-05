@@ -1,6 +1,6 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+use Orchestra\Testbench\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
 
 class DisposableEmailTest extends TestCase {
