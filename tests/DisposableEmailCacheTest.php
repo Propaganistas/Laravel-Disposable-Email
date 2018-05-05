@@ -2,6 +2,7 @@
 
 use Orchestra\Testbench\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
+use Illuminate\Support\Facades\Cache as FrameworkCache;
 
 class DisposableEmailCacheTest extends TestCase {
 
@@ -37,6 +38,21 @@ class DisposableEmailCacheTest extends TestCase {
         Cache::store($testList);
 
         $this->assertArraySubset(['google.com', 'outlook.com'], Cache::fetch());
+    }
+
+    /** @test */
+    public function the_fetch_or_update_method_falls_back_to_cache_renewal_on_empty_cache() {
+        Cache::store(['google.com']);
+
+        $fetch = Cache::fetchOrUpdate();
+
+        $this->assertCount(1, $fetch);
+
+        Cache::flush();
+
+        $fetch = Cache::fetchOrUpdate();
+
+        $this->assertNotCount(1, $fetch);
     }
 
 }
