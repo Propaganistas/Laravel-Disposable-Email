@@ -4,7 +4,7 @@ namespace Propaganistas\LaravelDisposableEmail\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class IndisposableFacade extends Facade {
+class Indisposable extends Facade {
 
     protected static function getFacadeAccessor() { return 'indisposable'; }
 
