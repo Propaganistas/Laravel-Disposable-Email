@@ -71,6 +71,15 @@ class Cache {
     }
 
     /**
+     * Flushes the current disposable email cache.
+     *
+     * @return bool
+     */
+    public static function flush() {
+        return FrameworkCache::forget(static::$cacheKey);
+    }
+
+    /**
      * Updates the domain cache.
      * Uses the locally stored domain file as a fallback.
      */
