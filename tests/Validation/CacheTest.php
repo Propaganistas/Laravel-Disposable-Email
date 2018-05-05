@@ -1,6 +1,6 @@
 <?php
 
-namespace Propaganistas\LaravelDisposableEmail\Validation\Tests;
+namespace Propaganistas\LaravelDisposableEmail\Tests\Validation;
 
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
