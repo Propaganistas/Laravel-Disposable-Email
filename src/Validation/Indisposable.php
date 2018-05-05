@@ -32,7 +32,7 @@ class Indisposable {
 
         // Just ignore this validator if the value doesn't even resemble an email or domain.
         if (count($domain) === 0) {
-            return true;
+            return false;
         }
 
         return in_array($domain[0], static::$domains);
