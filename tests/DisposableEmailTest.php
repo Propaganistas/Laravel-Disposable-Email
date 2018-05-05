@@ -6,7 +6,7 @@ use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
 class DisposableEmailTest extends TestCase {
 
     /** @test */
-    public function an_email_address_from_a_disposable_email_provider_should_be_detected() {
+    public function non_disposable_email_domains_should_not_be_detected_as_disposable() {
         $this->assertFalse(Indisposable::isDisposable('test@gmail.com'));
     }
 
