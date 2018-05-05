@@ -31,7 +31,7 @@ Uses the disposable domains blacklist from [andreis/disposable-email-domains](ht
     php artisan disposable:cache
     ```
 
-4. In your languages directory, add for each language an extra language line for the validator:
+4. (optional) In your languages directory, add for each language an extra language line for the validator:
 
 	```php
 	'indisposable' => 'Disposable email addresses are not allowed.',
