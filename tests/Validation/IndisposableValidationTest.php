@@ -6,7 +6,7 @@ use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
 use Propaganistas\LaravelDisposableEmail\Validation\IndisposableValidation;
 
-class IndisposableTest extends TestCase {
+class IndisposableValidationTestTest extends TestCase {
 
     /**
      * DisposableEmailCacheTest SetUp
