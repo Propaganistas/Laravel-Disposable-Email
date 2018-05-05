@@ -1,6 +1,6 @@
 <?php
 
-class TestCase extends Orchestra\Testbench\TestCase {
+class TestCase extends \Orchestra\Testbench\TestCase {
 
     /**
      * Laravel Disposable Email Test Package Aliases
