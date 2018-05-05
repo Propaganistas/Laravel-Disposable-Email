@@ -6,6 +6,14 @@ use Illuminate\Support\Facades\Cache as FrameworkCache;
 
 class DisposableEmailCacheTest extends TestCase {
 
+    /**
+     * DisposableEmailCacheTest SetUp
+     */
+    public function setUp() {
+        parent::setUp();
+        Cache::update();
+    }
+
     /** @test */
     public function we_should_be_able_to_fetch_the_remote_source() {
         $this->assertNotEmpty(Cache::fetchRemoteSource());
