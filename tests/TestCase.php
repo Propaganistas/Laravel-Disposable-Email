@@ -20,7 +20,7 @@ class TestCase extends \Orchestra\Testbench\TestCase {
      */
     protected function getPackageAliases($app) {
         return [
-            'Indispensable' => 'Propaganistas\LaravelDisposableEmail\Facades\Indisposable',
+            'Indisposable' => 'Propaganistas\LaravelDisposableEmail\Facades\Indisposable',
         ];
     }
 
