@@ -17,7 +17,7 @@ class DisposableEmailTest extends TestCase {
 
     /** @test */
     public function the_cache_store_method_should_store_data_as_expected() {
-        Cache::store(['test@example.com']);
+        Cache::store(['example.com']);
 
         $this->assertArrayHasKey(0, Cache::fetch());
     }
