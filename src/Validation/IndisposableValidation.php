@@ -4,7 +4,7 @@ namespace Propaganistas\LaravelDisposableEmail\Validation;
 
 use Illuminate\Support\Str;
 
-class Indisposable
+class IndisposableValidation
 {
     /**
      * The array of disposable domains.

@@ -4,7 +4,7 @@ namespace Propaganistas\LaravelDisposableEmail;
 
 use Illuminate\Support\ServiceProvider;
 use Propaganistas\LaravelDisposableEmail\Console\CacheDisposableDomainsCommand;
-use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
+use Propaganistas\LaravelDisposableEmail\Validation\IndisposableValidation;
 
 class DisposableEmailServiceProvider extends ServiceProvider
 {
@@ -21,7 +21,7 @@ class DisposableEmailServiceProvider extends ServiceProvider
             ]);
         }
 
-        $this->app['validator']->extend('indisposable', Indisposable::class . '@validate');
+        $this->app['validator']->extend('indisposable', IndisposableValidation::class . '@validate');
     }
 
     /**
