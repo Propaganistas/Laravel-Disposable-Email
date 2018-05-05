@@ -56,4 +56,18 @@ class Cache {
         return FrameworkCache::get(static::$cacheKey, []);
     }
 
+    /**
+     * Updates the domain cache.
+     * Uses the locally stored domain file as a fallback.
+     */
+    public static function update() {
+        $source = json_decode(static::fetchRemoteSource());
+
+        if (!$source) {
+            $source = json_decode(static::fetchLocalSource());
+        }
+
+        static::store($source);
+    }
+
 }
