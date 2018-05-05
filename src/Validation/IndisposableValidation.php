@@ -2,6 +2,8 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
+use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
+
 class IndisposableValidation
 {
     /**
