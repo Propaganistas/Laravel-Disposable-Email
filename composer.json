@@ -18,11 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "illuminate/support": ">=5.4,<5.7",
-        "illuminate/console": ">=5.0,<5.7",
-        "illuminate/validation": ">=5.0,<5.7",
-        "illuminate/cache": ">=5.0,<5.7"
+        "php": ">=7.0"
     },
     "autoload": {
         "psr-4": {
@@ -37,6 +33,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.1"
+        "phpunit/phpunit": "^7.1",
+        "orchestra/testbench": "~3.0"
     }
 }
