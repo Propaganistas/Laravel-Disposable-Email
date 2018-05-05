@@ -10,4 +10,9 @@ class DisposableEmailTest extends TestCase {
         $this->assertFalse(Indisposable::isDisposable('test@gmail.com'));
     }
 
+    /** @test */
+    public function a_commonly_known_disposable_email_provider_should_be_detected_as_disposable() {
+        $this->assertTrue(Indisposable::isDisposable('test@yopmail.com'));
+    }
+
 }
