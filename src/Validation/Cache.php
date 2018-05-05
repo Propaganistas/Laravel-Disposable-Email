@@ -44,7 +44,7 @@ class Cache {
      * @param $source
      * @return mixed
      */
-    public static function decodeSource($source) {
+    protected static function decodeSource($source) {
         return json_decode($source, true);
     }
 
