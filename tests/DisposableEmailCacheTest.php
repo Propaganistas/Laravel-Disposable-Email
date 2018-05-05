@@ -1,6 +1,7 @@
 <?php
 
-use Orchestra\Testbench\TestCase;
+namespace Propaganistas\LaravelDisposableEmail\Tests;
+
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
 
 class DisposableEmailCacheTest extends TestCase {

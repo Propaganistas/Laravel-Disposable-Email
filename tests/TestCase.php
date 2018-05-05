@@ -1,6 +1,8 @@
 <?php
 
-class TestCase extends \Orchestra\Testbench\TestCase {
+namespace Propaganistas\LaravelDisposableEmail\Tests;
+
+abstract class TestCase extends \Orchestra\Testbench\TestCase {
 
     /**
      * Laravel Disposable Email Test Package Service Providers
