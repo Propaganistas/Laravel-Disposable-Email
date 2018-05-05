@@ -31,4 +31,12 @@ class DisposableEmailTest extends TestCase {
         $this->assertNotContains($testDomain, Cache::fetch());
     }
 
+    /** @test */
+    public function the_cache_store_method_should_handle_json_strings() {
+        $testList = '["google.com", "outlook.com"]';
+        Cache::store($testList);
+
+        $this->assertArraySubset(['google.com', 'outlook.com'], Cache::fetch());
+    }
+
 }
