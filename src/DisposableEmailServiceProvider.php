@@ -22,7 +22,11 @@ class DisposableEmailServiceProvider extends ServiceProvider
             ]);
         }
 
-        $this->app['validator']->extend('indisposable', IndisposableValidation::class . '@validate');
+        $this->app['validator']->extend(
+            'indisposable',
+            IndisposableValidation::class . '@validate',
+            IndisposableValidation::$errorMessage
+        );
     }
 
     /**
