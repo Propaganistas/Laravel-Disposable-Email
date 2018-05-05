@@ -1,11 +1,12 @@
 <?php
 
-namespace Propaganistas\LaravelDisposableEmail\Tests;
+namespace Propaganistas\LaravelDisposableEmail\Validation\Tests;
 
+use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
 use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
-class DisposableEmailTest extends TestCase {
+class IndisposableTest extends TestCase {
 
     /**
      * DisposableEmailCacheTest SetUp
