@@ -2,7 +2,7 @@
 
 use Orchestra\Testbench\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Cache;
-use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
+use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
 class DisposableEmailTest extends TestCase {
 
