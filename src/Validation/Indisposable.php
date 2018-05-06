@@ -99,6 +99,13 @@ class Indisposable {
     }
 
     /**
+     * Flushes the remote domains cache;
+     */
+    public function flushCache() {
+        FrameworkCache::forget($this->cacheKey);
+    }
+
+    /**
      * Check whether the given JSON data is useful.
      *
      * @param string $data
