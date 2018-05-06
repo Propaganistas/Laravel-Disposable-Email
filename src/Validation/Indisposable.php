@@ -26,13 +26,13 @@ class Indisposable {
      *
      * @var array
      */
-    protected static $domains = [];
+    protected $domains = [];
 
     /**
      * Indisposable constructor.
      */
     public function __construct() {
-        static::$domains = Cache::fetchOrUpdate();
+        $this->domains = Cache::fetchOrUpdate();
     }
 
     /**
@@ -104,7 +104,7 @@ class Indisposable {
             return false;
         }
 
-        return in_array($domain[0], static::$domains);
+        return in_array($domain[0], $this->domains);
     }
 
     /**
