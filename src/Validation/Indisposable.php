@@ -32,7 +32,11 @@ class Indisposable {
      * Indisposable constructor.
      */
     public function __construct() {
-        $this->domains = $this->domains();
+        try {
+            $this->domains = $this->remoteDomains();
+        } catch (Exception $exception) {
+            $this->domains = $this->localDomains();
+        }
     }
 
     /**
@@ -62,19 +66,6 @@ class Indisposable {
 
             return json_decode($remote, true);
         });
-    }
-
-    /**
-     * Disposable domains list with fallback to the locally stored domain list.
-     *
-     * @return array
-     */
-    protected function domains() {
-        try {
-            return $this->remoteDomains();
-        } catch (Exception $exception) {
-            return $this->localDomains();
-        }
     }
 
     /**
