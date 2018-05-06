@@ -2,7 +2,16 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
+use Illuminate\Support\Facades\Cache as FrameworkCache;
+
 class Indisposable {
+
+    /**
+     * Framework cache key.
+     *
+     * @var string
+     */
+    protected $cacheKey = 'laravel-disposable-email.cache';
 
     /**
      * Array of disposable email domains.
@@ -16,6 +25,17 @@ class Indisposable {
      */
     public function __construct() {
         static::$domains = Cache::fetchOrUpdate();
+    }
+
+    /**
+     * Local domain array parsed and cached for optimal performance.
+     *
+     * @return array
+     */
+    public function localDomains() {
+        return FrameworkCache::rememberForever($this->cacheKey . 'local', function() {
+            return json_decode(file_get_contents(__DIR__.'/../../domains.json'), true);
+        });
     }
 
     /**
