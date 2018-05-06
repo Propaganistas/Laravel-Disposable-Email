@@ -3,8 +3,16 @@
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
 use Illuminate\Support\Facades\Cache as FrameworkCache;
+use Exception;
 
 class Indisposable {
+
+    /**
+     * The remote JSON source URI.
+     *
+     * @var string
+     */
+    protected $sourceUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
 
     /**
      * Framework cache key.
@@ -39,6 +47,24 @@ class Indisposable {
     }
 
     /**
+     * Remote domain array parsed and cached for optimal performance.
+     *
+     * @throws Exception
+     * @return array
+     */
+    public function remoteDomains() {
+        return FrameworkCache::rememberForever($this->cacheKey, function() {
+            $remote = file_get_contents($this->sourceUrl);
+
+            if (! $this->isUsefulJson($remote)) {
+                throw new Exception('Couldn\'t reach the remote disposable domain source.');
+            }
+
+            return json_decode($remote, true);
+        });
+    }
+
+    /**
      * Return the remainder of a string after a given value.
      * (Copy of Illuminate\Support's Str::after() method.)
      *
@@ -68,4 +94,15 @@ class Indisposable {
         return in_array($domain[0], static::$domains);
     }
 
+    /**
+     * Check whether the given JSON data is useful.
+     *
+     * @param string $data
+     * @return bool
+     */
+    private function isUsefulJson($data) {
+        $data = json_decode($data, true);
+
+        return json_last_error() === JSON_ERROR_NONE && ! empty($data);
+    }
 }
