@@ -65,6 +65,19 @@ class Indisposable {
     }
 
     /**
+     * Disposable domains list with fallback to the locally stored domain list.
+     *
+     * @return array
+     */
+    public function domains() {
+        try {
+            return $this->remoteDomains();
+        } catch (Exception $exception) {
+            return $this->localDomains();
+        }
+    }
+
+    /**
      * Return the remainder of a string after a given value.
      * (Copy of Illuminate\Support's Str::after() method.)
      *
