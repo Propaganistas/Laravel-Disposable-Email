@@ -32,7 +32,7 @@ class Indisposable {
      * Indisposable constructor.
      */
     public function __construct() {
-        $this->domains = Cache::fetchOrUpdate();
+        $this->domains = $this->domains();
     }
 
     /**
