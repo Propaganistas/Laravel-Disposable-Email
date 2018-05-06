@@ -40,7 +40,7 @@ class Indisposable {
      *
      * @return array
      */
-    public function localDomains() {
+    protected function localDomains() {
         return FrameworkCache::rememberForever($this->cacheKey . 'local', function() {
             return json_decode(file_get_contents(__DIR__.'/../../domains.json'), true);
         });
@@ -52,7 +52,7 @@ class Indisposable {
      * @throws Exception
      * @return array
      */
-    public function remoteDomains() {
+    protected function remoteDomains() {
         return FrameworkCache::rememberForever($this->cacheKey, function() {
             $remote = file_get_contents($this->sourceUrl);
 
@@ -69,7 +69,7 @@ class Indisposable {
      *
      * @return array
      */
-    public function domains() {
+    protected function domains() {
         try {
             return $this->remoteDomains();
         } catch (Exception $exception) {
@@ -85,7 +85,7 @@ class Indisposable {
      * @param  string  $search
      * @return string
      */
-    public static function stringAfter($subject, $search) {
+    protected function stringAfter($subject, $search) {
         return $search === '' ? $subject : array_reverse(explode($search, $subject, 2))[0];
     }
 
@@ -113,7 +113,7 @@ class Indisposable {
      * @param string $data
      * @return bool
      */
-    private function isUsefulJson($data) {
+    protected function isUsefulJson($data) {
         $data = json_decode($data, true);
 
         return json_last_error() === JSON_ERROR_NONE && ! empty($data);
