@@ -3,6 +3,7 @@
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
 use Illuminate\Support\Facades\Cache as FrameworkCache;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class Indisposable {
@@ -35,6 +36,7 @@ class Indisposable {
         try {
             $this->domains = $this->remoteDomains();
         } catch (Exception $exception) {
+            Log::warning($exception->getMessage());
             $this->domains = $this->localDomains();
         }
     }
