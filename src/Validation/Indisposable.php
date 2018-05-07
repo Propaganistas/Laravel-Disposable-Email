@@ -83,6 +83,18 @@ class Indisposable {
     }
 
     /**
+     * Check whether the given JSON data is useful.
+     *
+     * @param string $data
+     * @return bool
+     */
+    protected function isUsefulJson($data) {
+        $data = json_decode($data, true);
+
+        return json_last_error() === JSON_ERROR_NONE && ! empty($data);
+    }
+
+    /**
      * Checks whether or not the given email address' domain matches one from a disposable email service.
      *
      * @param $email
@@ -105,17 +117,5 @@ class Indisposable {
      */
     public function flushCache() {
         FrameworkCache::forget($this->cacheKey);
-    }
-
-    /**
-     * Check whether the given JSON data is useful.
-     *
-     * @param string $data
-     * @return bool
-     */
-    protected function isUsefulJson($data) {
-        $data = json_decode($data, true);
-
-        return json_last_error() === JSON_ERROR_NONE && ! empty($data);
     }
 }
