@@ -3,7 +3,7 @@
 namespace Propaganistas\LaravelDisposableEmail\Console;
 
 use Illuminate\Console\Command;
-use Propaganistas\LaravelDisposableEmail\Validation\Cache;
+use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
 class CacheDisposableDomainsCommand extends Command
 {
@@ -28,26 +28,19 @@ class CacheDisposableDomainsCommand extends Command
      */
     public function handle()
     {
-        if (! $data = Cache::fetchRemoteSource()) {
-            $this->error('Couldn\'t reach the list source. Aborting.');
-
-            return;
-        }
-
-        if (! $this->isUsefulJson($data)) {
-            $this->error('The fetched list appears to be invalid. Aborting.');
-
-            return;
-        }
-
         try {
-            Cache::store($data);
-        } catch (\Exception $exception) {
-            $this->error($exception->getMessage());
-            $this->error('Cannot write the fetched list to the cache. Aborting.');
-        }
 
-        $this->info('Disposable domains list updated successfully.');
+            Indisposable::flushCache();
+
+            $domains = Indisposable::remoteDomains();
+
+            $this->info('Successfully cached '. count($domains) . ' disposable email domains.');
+
+        } catch (\Exception $exception) {
+
+            $this->error($exception->getMessage());
+
+        }
     }
 
     /**
