@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array localDomains()
  * @method static void flushCache()
  * @method static string getCacheKey()
+ * @method static void setRemoteUrl()
  *
  * @package Propaganistas\LaravelDisposableEmail\Facades
  */
