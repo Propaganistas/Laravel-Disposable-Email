@@ -2,8 +2,8 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Tests\Validation;
 
+use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
-use Propaganistas\LaravelDisposableEmail\Validation\Cache;
 use Propaganistas\LaravelDisposableEmail\Validation\IndisposableValidation;
 
 class IndisposableValidationTestTest extends TestCase {
@@ -13,7 +13,7 @@ class IndisposableValidationTestTest extends TestCase {
      */
     public function setUp() {
         parent::setUp();
-        Cache::update();
+        Indisposable::flushCache();
     }
 
     /** @test */
