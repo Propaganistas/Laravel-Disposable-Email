@@ -36,7 +36,7 @@ class DisposableEmailServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('indisposable', function() {
+        $this->app->singleton('indisposable', function() {
             return new Indisposable();
         });
     }
