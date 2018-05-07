@@ -3,6 +3,7 @@
 namespace Propaganistas\LaravelDisposableEmail\Tests\Validation;
 
 use Illuminate\Support\Facades\Cache as FrameworkCache;
+use Propaganistas\LaravelDisposableEmail\Console\CacheDisposableDomainsCommand;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
@@ -54,4 +55,12 @@ class IndisposableTest extends TestCase {
         $this->assertNotNull(FrameworkCache::get($this->cacheKey));
     }
 
+    /** @test */
+    public function the_disposable_domain_cache_command_updates_the_domain_cache() {
+        $this->assertNull(FrameworkCache::get($this->cacheKey));
+
+        $this->artisan('disposable:cache');
+
+        $this->assertNotNull(FrameworkCache::get($this->cacheKey));
+    }
 }
