@@ -19,7 +19,10 @@
     ],
     "require": {
         "php": ">=7.0",
-        "laravel/framework": ">=5.0.0"
+        "illuminate/cache": ">=5.0,<5.7",
+        "illuminate/support": ">=5.0,<5.7",
+        "illuminate/console": ">=5.0,<5.7",
+        "illuminate/validation": ">=5.0,<5.7"
     },
     "autoload": {
         "psr-4": {
