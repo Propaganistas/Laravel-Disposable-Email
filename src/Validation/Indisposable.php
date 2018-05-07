@@ -2,7 +2,7 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
-use Illuminate\Support\Facades\Cache as FrameworkCache;
+use Illuminate\Cache\CacheManager;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -30,9 +30,20 @@ class Indisposable {
     protected $domains = [];
 
     /**
-     * Indisposable constructor.
+     * Caching service.
+     *
+     * @var CacheManager
      */
-    public function __construct() {
+    protected $cache;
+
+    /**
+     * Indisposable constructor.
+     *
+     * @param CacheManager $cache
+     */
+    public function __construct(CacheManager $cache) {
+        $this->cache = $cache;
+
         try {
             $this->domains = $this->remoteDomains();
         } catch (Exception $exception) {
@@ -47,7 +58,7 @@ class Indisposable {
      * @return array
      */
     public function localDomains() {
-        return FrameworkCache::rememberForever($this->cacheKey . 'local', function() {
+        return $this->cache->rememberForever($this->cacheKey . 'local', function() {
             return json_decode(file_get_contents(__DIR__.'/../../domains.json'), true);
         });
     }
@@ -59,7 +70,7 @@ class Indisposable {
      * @return array
      */
     public function remoteDomains() {
-        return FrameworkCache::rememberForever($this->cacheKey, function() {
+        return $this->cache->rememberForever($this->cacheKey, function() {
             $remote = file_get_contents($this->sourceUrl);
 
             if (! $this->isUsefulJson($remote)) {
@@ -116,6 +127,6 @@ class Indisposable {
      * Flushes the remote domains cache;
      */
     public function flushCache() {
-        FrameworkCache::forget($this->cacheKey);
+        $this->cache->forget($this->cacheKey);
     }
 }
