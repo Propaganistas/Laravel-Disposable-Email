@@ -141,8 +141,9 @@ class Indisposable {
      * Updates the current source URL.
      *
      * @param $url
+     * @return string;
      */
     public function setRemoteUrl($url) {
-        $this->remoteUrl = $url;
+        return $this->remoteUrl = $url;
     }
 }
