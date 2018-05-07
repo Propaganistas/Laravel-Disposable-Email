@@ -46,7 +46,7 @@ class Indisposable {
      *
      * @return array
      */
-    protected function localDomains() {
+    public function localDomains() {
         return FrameworkCache::rememberForever($this->cacheKey . 'local', function() {
             return json_decode(file_get_contents(__DIR__.'/../../domains.json'), true);
         });
