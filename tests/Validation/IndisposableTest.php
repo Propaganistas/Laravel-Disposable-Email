@@ -38,7 +38,7 @@ class IndisposableTest extends TestCase {
     public function the_remote_domains_cache_override_method_should_override_the_cache() {
         $this->assertNull(Cache::get($this->cacheKey));
 
-        Indisposable::setRemoteDomainsCache(['test@example.com']);
+        Indisposable::setRemoteDomainsCache(['example.com']);
 
         $this->assertCount(1, Indisposable::remoteDomains());
     }
