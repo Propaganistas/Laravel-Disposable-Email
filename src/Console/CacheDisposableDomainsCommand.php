@@ -30,6 +30,8 @@ class CacheDisposableDomainsCommand extends Command
     {
         try {
 
+            $oldDomains = Indisposable::remoteDomains();
+
             Indisposable::flushCache();
 
             $domains = Indisposable::remoteDomains();
@@ -41,6 +43,10 @@ class CacheDisposableDomainsCommand extends Command
         } catch (\Exception $exception) {
 
             $this->error($exception->getMessage());
+
+            if ($oldDomains) {
+                Indisposable::setRemoteDomainsCache($oldDomains);
+            }
 
         }
     }
