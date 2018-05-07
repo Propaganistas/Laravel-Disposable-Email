@@ -63,4 +63,9 @@ class IndisposableTest extends TestCase {
 
         $this->assertNotNull(FrameworkCache::get($this->cacheKey));
     }
+
+    /** @test */
+    public function remote_disposable_domains_can_be_loaded() {
+        $this->assertNotNull(Indisposable::remoteDomains());
+    }
 }
