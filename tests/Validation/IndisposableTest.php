@@ -8,6 +8,8 @@ use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
 class IndisposableTest extends TestCase {
 
+    private $cacheKey = 'laravel-disposable-email.cache';
+
     /**
      * DisposableEmailCacheTest SetUp
      */
@@ -31,11 +33,20 @@ class IndisposableTest extends TestCase {
         // Loads remote domains and caches them indefinitely.
         Indisposable::remoteDomains();
 
-        $this->assertNotNull(FrameworkCache::get('laravel-disposable-email.cache'));
+        $this->assertNotNull(FrameworkCache::get($this->cacheKey));
 
         Indisposable::flushCache();
 
-        $this->assertNull(FrameworkCache::get('laravel-disposable-email.cache'));
+        $this->assertNull(FrameworkCache::get($this->cacheKey));
+    }
+
+    /** @test */
+    public function the_indisposable_remote_domains_method_builds_a_cache() {
+        $this->assertNull(FrameworkCache::get($this->cacheKey));
+
+        Indisposable::remoteDomains();
+
+        $this->assertNotNull(FrameworkCache::get($this->cacheKey));
     }
 
 }
