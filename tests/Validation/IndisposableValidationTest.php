@@ -2,6 +2,7 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Tests\Validation;
 
+use Illuminate\Support\Facades\Validator;
 use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\IndisposableValidation;
@@ -30,6 +31,22 @@ class IndisposableValidationTestTest extends TestCase {
         $testEmail = 'example@yopmail.com';
 
         $this->assertFalse($validator->validate(null, $testEmail, null, null));
+    }
+
+    /** @test */
+    public function our_validation_method_is_usable_through_the_laravel_validator_facade() {
+        $passingValidation = Validator::make(
+            ['email' => 'example@gmail.com'],
+            ['email' => 'indisposable']
+        );
+
+        $failingValidation = Validator::make(
+            ['email' => 'example@yopmail.com'],
+            ['email' => 'indisposable']
+        );
+
+        $this->assertFalse($passingValidation->fails());
+        $this->assertTrue($failingValidation->fails());
     }
 
 }
