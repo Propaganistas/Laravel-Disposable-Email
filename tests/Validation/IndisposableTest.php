@@ -8,6 +8,11 @@ use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
 class IndisposableTest extends TestCase {
 
+    /**
+     * Indisposable remote domains cache key
+     *
+     * @var string
+     */
     private $cacheKey = 'laravel-disposable-email.cache';
 
     /**
