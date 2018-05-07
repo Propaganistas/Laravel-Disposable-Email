@@ -74,6 +74,21 @@ class IndisposableTest extends TestCase {
     }
 
     /** @test */
+    public function the_disposable_domain_cache_command_re_instantiates_the_remote_domains_cache_on_error() {
+        $this->assertNull(Cache::get($this->cacheKey));
+
+        Indisposable::setRemoteDomainsCache(['testdomain.com']);
+
+        Indisposable::setRemoteUrl('invalid URI to simulate a cache exception');
+
+        $this->artisan('disposable:cache');
+
+        $this->assertCount(1, Indisposable::remoteDomains());
+
+        $this->assertEquals(Indisposable::remoteDomains(), Cache::get($this->cacheKey));
+    }
+
+    /** @test */
     public function non_disposable_email_domains_should_not_be_detected_as_disposable() {
         $this->assertFalse(Indisposable::isDisposable('test@gmail.com'));
     }
