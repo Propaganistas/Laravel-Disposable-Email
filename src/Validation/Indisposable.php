@@ -146,4 +146,14 @@ class Indisposable {
     public function setRemoteUrl($url) {
         return $this->remoteUrl = $url;
     }
+
+    /**
+     * Forcefully updates the current remote domain cache with the given array of domains.
+     *
+     * @param array $domains
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public function setRemoteDomainsCache($domains) {
+        $this->cache->set($this->cacheKey, $domains);
+    }
 }
