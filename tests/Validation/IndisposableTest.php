@@ -25,13 +25,13 @@ class IndisposableTest extends TestCase {
     }
 
     /** @test */
-    public function non_disposable_email_domains_should_not_be_detected_as_disposable() {
-        $this->assertFalse(Indisposable::isDisposable('test@gmail.com'));
+    public function remote_disposable_domains_can_be_loaded() {
+        $this->assertNotNull(Indisposable::remoteDomains());
     }
 
     /** @test */
-    public function a_commonly_known_disposable_email_provider_should_be_detected_as_disposable() {
-        $this->assertTrue(Indisposable::isDisposable('test@yopmail.com'));
+    public function local_disposable_domains_can_be_loaded() {
+        $this->assertNotNull(Indisposable::localDomains());
     }
 
     /** @test */
@@ -65,12 +65,13 @@ class IndisposableTest extends TestCase {
     }
 
     /** @test */
-    public function remote_disposable_domains_can_be_loaded() {
-        $this->assertNotNull(Indisposable::remoteDomains());
+    public function non_disposable_email_domains_should_not_be_detected_as_disposable() {
+        $this->assertFalse(Indisposable::isDisposable('test@gmail.com'));
     }
 
     /** @test */
-    public function local_disposable_domains_can_be_loaded() {
-        $this->assertNotNull(Indisposable::localDomains());
+    public function a_commonly_known_disposable_email_provider_should_be_detected_as_disposable() {
+        $this->assertTrue(Indisposable::isDisposable('test@yopmail.com'));
     }
+
 }
