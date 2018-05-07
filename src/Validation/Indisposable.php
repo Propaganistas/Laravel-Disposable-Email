@@ -127,4 +127,13 @@ class Indisposable {
     public function flushCache() {
         $this->cache->forget($this->cacheKey);
     }
+
+    /**
+     * Grabs the current cache key.
+     *
+     * @return string
+     */
+    public function getCacheKey() {
+        return $this->cacheKey;
+    }
 }
