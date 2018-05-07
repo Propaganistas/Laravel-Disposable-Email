@@ -3,7 +3,6 @@
 namespace Propaganistas\LaravelDisposableEmail\Tests\Validation;
 
 use Illuminate\Support\Facades\Cache as FrameworkCache;
-use Propaganistas\LaravelDisposableEmail\Console\CacheDisposableDomainsCommand;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
