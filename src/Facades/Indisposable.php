@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Indisposable
  *
- * @method static boolean isDisposable()
+ * @method static boolean isDisposable(string $email)
  * @method static array remoteDomains()
  * @method static void flushCache()
  *
