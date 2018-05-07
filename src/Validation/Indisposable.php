@@ -151,9 +151,8 @@ class Indisposable {
      * Forcefully updates the current remote domain cache with the given array of domains.
      *
      * @param array $domains
-     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     public function setRemoteDomainsCache($domains) {
-        $this->cache->set($this->cacheKey, $domains);
+        $this->cache->forever($this->cacheKey, $domains);
     }
 }
