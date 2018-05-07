@@ -13,7 +13,7 @@ class IndisposableTest extends TestCase {
      *
      * @var string
      */
-    private $cacheKey = 'laravel-disposable-email.cache';
+    private $cacheKey;
 
     /**
      * DisposableEmailCacheTest SetUp
@@ -21,6 +21,7 @@ class IndisposableTest extends TestCase {
     public function setUp() {
         parent::setUp();
         Indisposable::flushCache();
+        $this->cacheKey = Indisposable::getCacheKey();
     }
 
     /** @test */
