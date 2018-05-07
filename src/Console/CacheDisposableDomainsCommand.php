@@ -43,16 +43,4 @@ class CacheDisposableDomainsCommand extends Command
         }
     }
 
-    /**
-     * Check whether the given JSON data is useful.
-     *
-     * @param string $data
-     * @return bool
-     */
-    private function isUsefulJson($data)
-    {
-        $data = json_decode($data, true);
-
-        return json_last_error() === JSON_ERROR_NONE && ! empty($data);
-    }
 }
