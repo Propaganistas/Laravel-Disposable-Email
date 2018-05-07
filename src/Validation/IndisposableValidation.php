@@ -12,7 +12,7 @@ class IndisposableValidation
      *
      * @var string
      */
-    static $errorMessage = 'Disposable email addresses are not allowed.';
+    public static $errorMessage = 'Disposable email addresses are not allowed.';
 
     /**
      * Validates whether an email address does not originate from a disposable email service.
