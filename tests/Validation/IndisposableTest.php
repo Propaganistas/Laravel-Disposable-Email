@@ -68,4 +68,9 @@ class IndisposableTest extends TestCase {
     public function remote_disposable_domains_can_be_loaded() {
         $this->assertNotNull(Indisposable::remoteDomains());
     }
+
+    /** @test */
+    public function local_disposable_domains_can_be_loaded() {
+        $this->assertNotNull(Indisposable::localDomains());
+    }
 }
