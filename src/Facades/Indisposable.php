@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static boolean isDisposable(string $email)
  * @method static array remoteDomains()
+ * @method static array localDomains()
  * @method static void flushCache()
  *
  * @package Propaganistas\LaravelDisposableEmail\Facades
