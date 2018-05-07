@@ -136,4 +136,13 @@ class Indisposable {
     public function getCacheKey() {
         return $this->cacheKey;
     }
+
+    /**
+     * Updates the current source URL.
+     *
+     * @param $url
+     */
+    public function setRemoteUrl($url) {
+        $this->sourceUrl = $url;
+    }
 }
