@@ -12,7 +12,7 @@ class Indisposable {
      *
      * @var string
      */
-    protected $sourceUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
+    protected $remoteUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
 
     /**
      * Framework cache key.
@@ -69,7 +69,7 @@ class Indisposable {
      */
     public function remoteDomains() {
         return $this->cache->rememberForever($this->cacheKey, function() {
-            $remote = file_get_contents($this->sourceUrl);
+            $remote = file_get_contents($this->remoteUrl);
 
             if (! $this->isUsefulJson($remote)) {
                 throw new Exception('Couldn\'t reach the remote disposable domain source.');
@@ -143,6 +143,6 @@ class Indisposable {
      * @param $url
      */
     public function setRemoteUrl($url) {
-        $this->sourceUrl = $url;
+        $this->remoteUrl = $url;
     }
 }
