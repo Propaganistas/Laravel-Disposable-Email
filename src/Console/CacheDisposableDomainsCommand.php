@@ -34,7 +34,9 @@ class CacheDisposableDomainsCommand extends Command
 
             $domains = Indisposable::remoteDomains();
 
-            $this->info('Successfully cached '. count($domains) . ' disposable email domains.');
+            $domainCount = count($domains);
+
+            $this->info('Successfully cached '. $domainCount . ' disposable email '. str_plural('domains', $domainCount) .'.');
 
         } catch (\Exception $exception) {
 
