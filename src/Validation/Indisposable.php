@@ -20,7 +20,7 @@ class Indisposable {
      *
      * @var string
      */
-    protected $cacheKey = 'laravel-disposable-email.cache';
+    protected $cacheKey = 'disposable-email.domains';
 
     /**
      * Array of disposable email domains.
