@@ -2,7 +2,7 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Tests\Validation;
 
-use Illuminate\Support\Facades\Cache as FrameworkCache;
+use Illuminate\Support\Facades\Cache;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
@@ -39,29 +39,29 @@ class IndisposableTest extends TestCase {
         // Loads remote domains and caches them indefinitely.
         Indisposable::remoteDomains();
 
-        $this->assertNotNull(FrameworkCache::get($this->cacheKey));
+        $this->assertNotNull(Cache::get($this->cacheKey));
 
         Indisposable::flushCache();
 
-        $this->assertNull(FrameworkCache::get($this->cacheKey));
+        $this->assertNull(Cache::get($this->cacheKey));
     }
 
     /** @test */
     public function the_indisposable_remote_domains_method_builds_a_cache() {
-        $this->assertNull(FrameworkCache::get($this->cacheKey));
+        $this->assertNull(Cache::get($this->cacheKey));
 
         Indisposable::remoteDomains();
 
-        $this->assertNotNull(FrameworkCache::get($this->cacheKey));
+        $this->assertNotNull(Cache::get($this->cacheKey));
     }
 
     /** @test */
     public function the_disposable_domain_cache_command_updates_the_domain_cache() {
-        $this->assertNull(FrameworkCache::get($this->cacheKey));
+        $this->assertNull(Cache::get($this->cacheKey));
 
         $this->artisan('disposable:cache');
 
-        $this->assertNotNull(FrameworkCache::get($this->cacheKey));
+        $this->assertNotNull(Cache::get($this->cacheKey));
     }
 
     /** @test */
