@@ -86,6 +86,12 @@ class IndisposableTest extends TestCase {
         $this->assertCount(1, Indisposable::remoteDomains());
 
         $this->assertEquals(Indisposable::remoteDomains(), Cache::get($this->cacheKey));
+
+        Indisposable::setRemoteUrl('https://rawgit.com/andreis/disposable-email-domains/master/domains.json');
+
+        $this->artisan('disposable:cache');
+
+        $this->assertNotCount(1, Indisposable::remoteDomains());
     }
 
     /** @test */
