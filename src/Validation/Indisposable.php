@@ -58,7 +58,7 @@ class Indisposable {
      * @throws Exception
      * @return array
      */
-    protected function remoteDomains() {
+    public function remoteDomains() {
         return FrameworkCache::rememberForever($this->cacheKey, function() {
             $remote = file_get_contents($this->sourceUrl);
 
