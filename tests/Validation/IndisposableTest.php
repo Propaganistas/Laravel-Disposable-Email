@@ -111,6 +111,9 @@ class IndisposableTest extends TestCase {
         $this->assertFalse(Indisposable::isDisposable('test@example@me.com'));
         $this->assertFalse(Indisposable::isDisposable('lorem ipsum'));
         $this->assertFalse(Indisposable::isDisposable('/.*/g'));
+        $this->assertFalse(Indisposable::isDisposable('test@yopmail.com@me'));
+        $this->assertFalse(Indisposable::isDisposable('yopmail.com@yopmail.com@yopmail.com'));
+        $this->assertFalse(Indisposable::isDisposable('yopmail.com yopmail.com yopmail.com'));
     }
 
 }
