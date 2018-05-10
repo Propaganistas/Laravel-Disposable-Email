@@ -80,18 +80,6 @@ class Indisposable {
     }
 
     /**
-     * Return the remainder of a string after a given value.
-     * (Copy of Illuminate\Support's Str::after() method.)
-     *
-     * @param  string  $subject
-     * @param  string  $search
-     * @return string
-     */
-    protected function stringAfter($subject, $search) {
-        return $search === '' ? $subject : array_reverse(explode($search, $subject, 2))[0];
-    }
-
-    /**
      * Check whether the given JSON data is useful.
      *
      * @param string $data
@@ -111,7 +99,11 @@ class Indisposable {
      */
     public function isDisposable($email) {
         // Parse the email to its top level domain.
-        preg_match("/[^\.\/]+\.[^\.\/]+$/", $this->stringAfter($email, '@'), $domain);
+        preg_match(
+            "/[^\.\/]+\.[^\.\/]+$/",
+            array_reverse(explode('@', $email, 2))[0],
+            $domain
+        );
 
         // Just ignore this validator if the value doesn't even resemble an email or domain.
         if (count($domain) === 0) {
