@@ -104,4 +104,13 @@ class IndisposableTest extends TestCase {
         $this->assertTrue(Indisposable::isDisposable('test@yopmail.com'));
     }
 
+    /** @test */
+    public function invalid_email_addresses_ignored_discarded_by_the_isDisposable_method() {
+        $this->assertFalse(Indisposable::isDisposable(''));
+        $this->assertFalse(Indisposable::isDisposable('@@'));
+        $this->assertFalse(Indisposable::isDisposable('test@example@me.com'));
+        $this->assertFalse(Indisposable::isDisposable('lorem ipsum'));
+        $this->assertFalse(Indisposable::isDisposable('/.*/g'));
+    }
+
 }
