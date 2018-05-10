@@ -101,7 +101,7 @@ class Indisposable {
         // Parse the email to its top level domain.
         preg_match(
             "/[^\.\/]+\.[^\.\/]+$/",
-            array_reverse(explode('@', $email, 2))[0],
+            explode('@', $email)[1] ?? '',
             $domain
         );
 
