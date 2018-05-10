@@ -111,7 +111,7 @@ class Indisposable {
      */
     public function isDisposable($email) {
         // Parse the email to its top level domain.
-        preg_match("/[^\.\/]+\.[^\.\/]+$/", static::stringAfter($email, '@'), $domain);
+        preg_match("/[^\.\/]+\.[^\.\/]+$/", $this->stringAfter($email, '@'), $domain);
 
         // Just ignore this validator if the value doesn't even resemble an email or domain.
         if (count($domain) === 0) {
