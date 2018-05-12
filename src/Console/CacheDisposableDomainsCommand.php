@@ -3,6 +3,7 @@
 namespace Propaganistas\LaravelDisposableEmail\Console;
 
 use Illuminate\Console\Command;
+use Propaganistas\LaravelDisposableEmail\Facades\Indisposable;
 
 class CacheDisposableDomainsCommand extends Command
 {
@@ -21,71 +22,33 @@ class CacheDisposableDomainsCommand extends Command
     protected $description = 'Caches the latest disposable email domains list';
 
     /**
-     * The JSON source URL.
-     *
-     * @var string
-     */
-    public static $sourceUrl = 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json';
-
-    /**
      * Execute the console command.
      *
      * @return void
      */
     public function handle()
     {
-        if (! $data = $this->fetchFromSource()) {
-            $this->error('Couldn\'t reach the list source. Aborting.');
+        try {
 
-            return;
+            $oldDomains = Indisposable::remoteDomains();
+
+            Indisposable::flushCache();
+
+            $domains = Indisposable::remoteDomains();
+
+            $domainCount = count($domains);
+
+            $this->info('Successfully cached '. $domainCount . ' disposable email '. str_plural('domains', $domainCount) .'.');
+
+        } catch (\Exception $exception) {
+
+            $this->error($exception->getMessage());
+
+            if ($oldDomains) {
+                Indisposable::setRemoteDomainsCache($oldDomains);
+            }
+
         }
-
-        if (! $this->isUsefulJson($data)) {
-            $this->error('The fetched list appears to be invalid. Aborting.');
-
-            return;
-        }
-
-        if (! $this->storeData($data)) {
-            $this->error('Cannot write the fetched list to [storage/framework/disposable_domains.json]. Aborting.');
-
-            return;
-        }
-
-        $this->info('Disposable domains list updated successfully.');
     }
 
-    /**
-     * Fetch new data from the source URL.
-     *
-     * @return bool
-     */
-    protected function fetchFromSource()
-    {
-        return file_get_contents(static::$sourceUrl);
-    }
-
-    /**
-     * Writes data to the disk.
-     *
-     * @param string $data
-     * @return bool
-     */
-    protected function storeData($data)
-    {
-        return file_put_contents(base_path('storage/framework/disposable_domains.json'), $data);
-    }
-
-    /**
-     * Check whether the given JSON data is useful.
-     *
-     * @param string $data
-     * @return bool
-     */
-    private function isUsefulJson($data)
-    {
-        $data = json_decode($data, true);
-
-        return json_last_error() === JSON_ERROR_NONE && ! empty($data);
-    }
 }
