@@ -27,8 +27,8 @@
         "illuminate/validation": ">=5.0,<5.7"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.1",
-        "orchestra/testbench": "~3.0"
+        "phpunit/phpunit": "*",
+        "orchestra/testbench": "*"
     },
     "autoload": {
         "psr-4": {
