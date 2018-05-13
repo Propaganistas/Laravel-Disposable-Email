@@ -19,13 +19,21 @@
     ],
     "require": {
         "php": ">=7.0",
+        "illuminate/cache": ">=5.0,<5.7",
+        "illuminate/config": ">=5.0,<5.7",
+        "illuminate/contracts": ">=5.0,<5.7",
         "illuminate/support": ">=5.0,<5.7",
         "illuminate/console": ">=5.0,<5.7",
         "illuminate/validation": ">=5.0,<5.7"
     },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "orchestra/testbench": "*"
+    },
     "autoload": {
         "psr-4": {
-            "Propaganistas\\LaravelDisposableEmail\\": "src/"
+            "Propaganistas\\LaravelDisposableEmail\\": "src/",
+            "Propaganistas\\LaravelDisposableEmail\\Tests\\": "tests/"
         }
     },
     "extra": {

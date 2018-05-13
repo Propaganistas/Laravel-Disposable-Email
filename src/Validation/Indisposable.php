@@ -2,52 +2,28 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
-use Illuminate\Support\Str;
+use Propaganistas\LaravelDisposableEmail\Facades\DisposableDomains;
 
 class Indisposable
 {
     /**
-     * The array of disposable domains.
+     * Default error message.
      *
-     * @var array
+     * @var string
      */
-    protected static $domains = [];
-
-    /**
-     * Disposable constructor.
-     */
-    public function __construct()
-    {
-        if (empty(static::$domains)) {
-            $path = base_path('storage/framework/disposable_domains.json');
-
-            // If the list hasn't been fetched yet, fall back to defaults.
-            // This ensures developers are up and running right away.
-            static::$domains = json_decode(file_get_contents(
-                file_exists($path) ? $path : (__DIR__ . '/../../domains.json')
-            ), true);
-        }
-    }
+    public static $errorMessage = 'Disposable email addresses are not allowed.';
 
     /**
      * Validates whether an email address does not originate from a disposable email service.
      *
-     * @param $attribute
-     * @param $value
-     * @param $parameters
-     * @param $validator
+     * @param string $attribute
+     * @param mixed $value
+     * @param array $parameters
+     * @param \Illuminate\Validation\Validator $validator
      * @return bool
      */
     public function validate($attribute, $value, $parameters, $validator)
     {
-        // Parse the email to its top level domain.
-        preg_match("/[^\.\/]+\.[^\.\/]+$/", Str::after($value, '@'), $domain);
-
-        // Just ignore this validator if the value doesn't even resemble an email or domain.
-        if (count($domain) === 0) {
-            return true;
-        }
-
-        return ! in_array($domain[0], static::$domains);
+        return ! DisposableDomains::isDisposable($value);
     }
 }
