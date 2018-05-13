@@ -3,12 +3,18 @@
 namespace Propaganistas\LaravelDisposableEmail;
 
 use Illuminate\Support\ServiceProvider;
-use Propaganistas\LaravelDisposableEmail\Console\CacheDisposableDomainsCommand;
+use Propaganistas\LaravelDisposableEmail\Console\UpdateDisposableDomainsCommand;
 use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
-use Propaganistas\LaravelDisposableEmail\Validation\IndisposableValidation;
 
 class DisposableEmailServiceProvider extends ServiceProvider
 {
+    /**
+     * The config source path.
+     *
+     * @var string
+     */
+    protected $config = __DIR__.'/../config/disposable-email.php';
+
     /**
      * Bootstrap the application services.
      *
@@ -17,16 +23,14 @@ class DisposableEmailServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-            $this->commands([
-                CacheDisposableDomainsCommand::class,
-            ]);
+            $this->commands(UpdateDisposableDomainsCommand::class);
         }
 
-        $this->app['validator']->extend(
-            'indisposable',
-            IndisposableValidation::class . '@validate',
-            IndisposableValidation::$errorMessage
-        );
+        $this->publishes([
+            $this->config => config_path('disposable-email.php'),
+        ], 'laravel-disposable-email');
+
+        $this->app['validator']->extend('indisposable', Indisposable::class.'@validate', Indisposable::$errorMessage);
     }
 
     /**
@@ -36,8 +40,23 @@ class DisposableEmailServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('indisposable', function() {
-            return new Indisposable($this->app['cache']);
+        $this->mergeConfigFrom($this->config, 'disposable-email');
+
+        $this->app->singleton('disposable_email.domains', function ($app) {
+            // Only build and pass the requested cache store if caching is enabled.
+            if ($app['config']['disposable-email.cache.enabled']) {
+                $store = $app['config']['disposable-email.cache.store'];
+                $cache = $app['cache']->store($store == 'default' ? $app['config']['cache.default'] : $store);
+            }
+
+            $instance = new DisposableDomains($cache ?? null);
+
+            $instance->setStoragePath($app['config']['disposable-email.storage']);
+            $instance->setCacheKey($app['config']['disposable-email.cache.key']);
+
+            return $instance->bootstrap();
         });
+
+        $this->app->alias('disposable_email.domains', DisposableDomains::class);
     }
 }

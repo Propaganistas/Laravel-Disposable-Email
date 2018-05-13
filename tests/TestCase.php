@@ -2,28 +2,66 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Tests;
 
-abstract class TestCase extends \Orchestra\Testbench\TestCase {
+use Orchestra\Testbench\TestCase as BaseTestCase;
+
+abstract class TestCase extends BaseTestCase
+{
+    /**
+     * @var string
+     */
+    protected $storagePath = __DIR__.'/domains.json';
 
     /**
-     * Laravel Disposable Email Test Package Service Providers
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application $app
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('disposable-email.storage', $this->storagePath);
+    }
+
+    /**
+     * Clean up the testing environment before the next test.
+     *
+     * @return void
+     */
+    protected function tearDown()
+    {
+        $this->disposable()->flushSource();
+        $this->disposable()->flushCache();
+
+        parent::tearDown();
+    }
+
+    /**
+     * Package Service Providers
      *
      * @param \Illuminate\Foundation\Application $app
      * @return array
      */
-    protected function getPackageProviders($app) {
+    protected function getPackageProviders($app)
+    {
         return ['Propaganistas\LaravelDisposableEmail\DisposableEmailServiceProvider'];
     }
 
     /**
-     * Laravel Disposable Email Test Package Aliases
+     * Package Aliases
      *
      * @param \Illuminate\Foundation\Application $app
      * @return array
      */
-    protected function getPackageAliases($app) {
-        return [
-            'Indisposable' => 'Propaganistas\LaravelDisposableEmail\Facades\Indisposable',
-        ];
+    protected function getPackageAliases($app)
+    {
+        return ['Indisposable' => 'Propaganistas\LaravelDisposableEmail\Facades\DisposableDomains'];
     }
 
+    /**
+     * @return \Propaganistas\LaravelDisposableEmail\DisposableDomains
+     */
+    protected function disposable()
+    {
+        return $this->app['disposable_email.domains'];
+    }
 }
