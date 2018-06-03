@@ -51,24 +51,25 @@ class UpdateDisposableDomainsCommand extends Command
     /**
      * UpdateDisposableDomainsCommand constructor.
      *
-     * @param \Propaganistas\LaravelDisposableEmail\DisposableDomains $disposable
      * @param \Illuminate\Config\Repository $config
      */
-    public function __construct(DisposableDomains $disposable, Config $config)
+    public function __construct(Config $config)
     {
         parent::__construct();
 
-        $this->disposableDomains = $disposable;
         $this->config = $config;
     }
 
     /**
      * Execute the console command.
      *
+     * @param \Propaganistas\LaravelDisposableEmail\DisposableDomains $disposable
      * @return void
      */
-    public function handle()
+    public function handle(DisposableDomains $disposable)
     {
+        $this->disposableDomains = $disposable;
+
         $this->line('Fetching from source...');
 
         $data = $this->fetchFromSource();
@@ -143,7 +144,6 @@ class UpdateDisposableDomainsCommand extends Command
      */
     protected function save($data)
     {
-
         if (file_put_contents($this->disposableDomains->getStoragePath(), $data) === false) {
             return false;
         }
