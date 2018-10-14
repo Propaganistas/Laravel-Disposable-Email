@@ -125,4 +125,12 @@ class DisposableDomainsTest extends TestCase
         $this->assertTrue($this->disposable()->isDisposable('example@yopmail.com'));
         $this->assertFalse($this->disposable()->isDisposable('example@gmail.com'));
     }
+
+    /** @test */
+    public function it_checks_the_full_email_domain()
+    {
+        $this->assertTrue($this->disposable()->isDisposable('example@mailinator.com'));
+        $this->assertTrue($this->disposable()->isDisposable('example@mail.mailinator.com'));
+        $this->assertFalse($this->disposable()->isDisposable('example@isnotdisposable.mailinator.com'));
+    }
 }

@@ -4,6 +4,7 @@ namespace Propaganistas\LaravelDisposableEmail;
 
 use ErrorException;
 use Illuminate\Contracts\Cache\Repository as Cache;
+use Illuminate\Support\Arr;
 use Propaganistas\LaravelDisposableEmail\Traits\ParsesJson;
 
 class DisposableDomains
@@ -102,22 +103,20 @@ class DisposableDomains
     }
 
     /**
-     * Checks whether or not the given email address' domain matches one from a disposable email service.
+     * Checks whether the given email address' domain matches a disposable email service.
      *
      * @param string $email
      * @return bool
      */
     public function isDisposable($email)
     {
-        // Parse the email to its top level domain.
-        preg_match("/[^\.\/]+\.[^\.\/]+$/", explode('@', $email, 2)[1] ?? '', $domain);
-
-        // Just ignore this validator if the value doesn't even resemble an email or domain.
-        if (count($domain) === 0) {
-            return false;
+        if ($domain = Arr::get(explode('@', $email, 2), 1)) {
+            return in_array($domain, $this->domains);
         }
 
-        return in_array($domain[0], $this->domains);
+        // Just ignore this validator if the value doesn't even resemble an email or domain.
+        return false;
+
     }
 
     /**
