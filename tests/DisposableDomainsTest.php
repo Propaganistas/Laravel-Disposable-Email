@@ -123,7 +123,12 @@ class DisposableDomainsTest extends TestCase
     public function it_can_verify_disposability()
     {
         $this->assertTrue($this->disposable()->isDisposable('example@yopmail.com'));
+        $this->assertFalse($this->disposable()->isNotDisposable('example@yopmail.com'));
+        $this->assertFalse($this->disposable()->isIndisposable('example@yopmail.com'));
+
         $this->assertFalse($this->disposable()->isDisposable('example@gmail.com'));
+        $this->assertTrue($this->disposable()->isNotDisposable('example@gmail.com'));
+        $this->assertTrue($this->disposable()->isIndisposable('example@gmail.com'));
     }
 
     /** @test */
@@ -131,6 +136,6 @@ class DisposableDomainsTest extends TestCase
     {
         $this->assertTrue($this->disposable()->isDisposable('example@mailinator.com'));
         $this->assertTrue($this->disposable()->isDisposable('example@mail.mailinator.com'));
-        $this->assertFalse($this->disposable()->isDisposable('example@isnotdisposable.mailinator.com'));
+        $this->assertTrue($this->disposable()->isNotDisposable('example@isnotdisposable.mailinator.com'));
     }
 }

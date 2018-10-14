@@ -116,7 +116,28 @@ class DisposableDomains
 
         // Just ignore this validator if the value doesn't even resemble an email or domain.
         return false;
+    }
 
+    /**
+     * Checks whether the given email address' domain doesn't match a disposable email service.
+     *
+     * @param string $email
+     * @return bool
+     */
+    public function isNotDisposable($email)
+    {
+        return ! $this->isDisposable($email);
+    }
+
+    /**
+     * Alias of "isNotDisposable".
+     *
+     * @param string $email
+     * @return bool
+     */
+    public function isIndisposable($email)
+    {
+        return $this->isNotDisposable($email);
     }
 
     /**
