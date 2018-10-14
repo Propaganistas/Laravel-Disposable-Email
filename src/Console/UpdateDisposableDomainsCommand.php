@@ -89,7 +89,7 @@ class UpdateDisposableDomainsCommand extends Command
         $this->line('Saving response to storage...');
 
         if (! $this->save($data)) {
-            $this->error('Couldn\'t write to storage ('.$this->disposableDomains->getStoragePath().'). Aborting.');
+            $this->error('Couldn\'t write to storage ('.$this->disposableDomains->getStoragePath().')! Aborting.');
 
             return;
         }
