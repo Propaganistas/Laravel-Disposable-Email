@@ -18,13 +18,13 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "illuminate/cache": ">=5.0,<5.8",
-        "illuminate/config": ">=5.0,<5.8",
-        "illuminate/contracts": ">=5.0,<5.8",
-        "illuminate/support": ">=5.0,<5.8",
-        "illuminate/console": ">=5.0,<5.8",
-        "illuminate/validation": ">=5.0,<5.8"
+        "php": ">=7.1",
+        "illuminate/cache": ">=5.0,<5.9",
+        "illuminate/config": ">=5.0,<5.9",
+        "illuminate/contracts": ">=5.0,<5.9",
+        "illuminate/support": ">=5.0,<5.9",
+        "illuminate/console": ">=5.0,<5.9",
+        "illuminate/validation": ">=5.0,<5.9"
     },
     "require-dev": {
         "mockery/mockery": "*",
