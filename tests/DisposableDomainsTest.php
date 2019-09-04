@@ -59,7 +59,7 @@ class DisposableDomainsTest extends TestCase
 
         $this->disposable()->bootstrap();
 
-        $this->assertAttributeEquals(['foo'], 'domains', $this->disposable());
+        $this->assertEquals(['foo'], $this->disposable()->getDomains());
     }
 
     /** @test */
@@ -68,7 +68,7 @@ class DisposableDomainsTest extends TestCase
         $this->app['config']['disposable-email.cache.enabled'] = false;
 
         $this->assertNull($this->app['cache.store'][$this->disposable()->getCacheKey()]);
-        $this->assertAttributeContains('yopmail.com', 'domains', $this->disposable());
+        $this->assertContains('yopmail.com',  $this->disposable()->getDomains());
     }
 
     /** @test */
@@ -78,7 +78,7 @@ class DisposableDomainsTest extends TestCase
 
         file_put_contents($this->storagePath, json_encode(['foo']));
 
-        $this->assertAttributeEquals(['foo'], 'domains', $this->disposable());
+        $this->assertEquals(['foo'], $this->disposable()->getDomains());
     }
 
     /** @test */
@@ -86,7 +86,7 @@ class DisposableDomainsTest extends TestCase
     {
         $this->app['config']['disposable-email.cache.enabled'] = false;
 
-        $this->assertAttributeContains('yopmail.com', 'domains', $this->disposable());
+        $this->assertContains('yopmail.com', $this->disposable()->getDomains());
     }
 
     /** @test */

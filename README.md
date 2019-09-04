@@ -18,7 +18,7 @@ Uses the disposable domains blacklist from [andreis/disposable-email-domains](ht
     composer require propaganistas/laravel-disposable-email
     ```
 
-2. The Service Provider will be auto-discovered. If you're running Laravel 5.4 or below, add the Service Provider manually to the end of the `$providers` array:
+2. If you don't use auto-discovery, open up your app config and add the Service Provider to the `$providers` array:
 
      ```php
     'providers' => [

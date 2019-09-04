@@ -161,6 +161,16 @@ class DisposableDomains
     }
 
     /**
+     * Get the list of disposable domains.
+     *
+     * @return array
+     */
+    public function getDomains()
+    {
+        return $this->domains;
+    }
+
+    /**
      * Get the storage path.
      *
      * @return string
