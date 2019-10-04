@@ -110,7 +110,7 @@ class DisposableDomains
      */
     public function isDisposable($email)
     {
-        if ($domain = Arr::get(explode('@', $email, 2), 1)) {
+        if ($domain = Str::lower(Arr::get(explode('@', $email, 2), 1))) {
             return in_array($domain, $this->domains);
         }
 
