@@ -5,6 +5,7 @@ namespace Propaganistas\LaravelDisposableEmail;
 use ErrorException;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Propaganistas\LaravelDisposableEmail\Traits\ParsesJson;
 
 class DisposableDomains
