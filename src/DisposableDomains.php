@@ -5,6 +5,7 @@ namespace Propaganistas\LaravelDisposableEmail;
 use ErrorException;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Propaganistas\LaravelDisposableEmail\Traits\ParsesJson;
 
 class DisposableDomains
@@ -110,7 +111,7 @@ class DisposableDomains
      */
     public function isDisposable($email)
     {
-        if ($domain = Arr::get(explode('@', $email, 2), 1)) {
+        if ($domain = Str::lower(Arr::get(explode('@', $email, 2), 1))) {
             return in_array($domain, $this->domains);
         }
 
