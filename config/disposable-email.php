@@ -10,12 +10,12 @@ return [
     | The source URL yielding a list of disposable email domains. Change this
     | to whatever source you like. Just make sure it returns a JSON array.
     |
-    | A sensible default is provided using Rawgit's services. Rawgit is
+    | A sensible default is provided using jsDelivr's services. jsDelivr is
     | a free service, so there are no uptime or support guarantees.
     |
     */
 
-    'source' => 'https://rawgit.com/andreis/disposable-email-domains/master/domains.json',
+    'source' => 'https://cdn.jsdelivr.net/gh/andreis/disposable-email-domains@master/domains.json',
 
     /*
     |--------------------------------------------------------------------------
