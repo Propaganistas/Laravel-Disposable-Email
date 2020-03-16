@@ -1,8 +1,6 @@
 # Laravel Disposable Email
 
-[![Build Status](https://travis-ci.org/Propaganistas/Laravel-Disposable-Email.svg?branch=master)](https://travis-ci.org/Propaganistas/Laravel-Disposable-Email)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Propaganistas/Laravel-Disposable-Email/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Propaganistas/Laravel-Disposable-Email/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/Propaganistas/Laravel-Disposable-Email/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Propaganistas/Laravel-Disposable-Email/?branch=master)
+![Tests](https://github.com/Propaganistas/Laravel-Disposable-Email/workflows/Tests/badge.svg?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/propaganistas/laravel-disposable-email/v/stable)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
 [![Total Downloads](https://poser.pugx.org/propaganistas/laravel-disposable-email/downloads)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
 [![License](https://poser.pugx.org/propaganistas/laravel-disposable-email/license)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
