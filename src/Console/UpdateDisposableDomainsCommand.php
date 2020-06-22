@@ -13,14 +13,6 @@ class UpdateDisposableDomainsCommand extends Command
     use ParsesJson;
 
     /**
-     * The console command name.
-     * For Laravel 5.0
-     *
-     * @var string
-     */
-    protected $name = 'disposable:update';
-
-    /**
      * The name and signature of the console command.
      *
      * @var string
