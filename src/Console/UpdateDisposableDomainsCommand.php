@@ -3,7 +3,7 @@
 namespace Propaganistas\LaravelDisposableEmail\Console;
 
 use Exception;
-use Illuminate\Config\Repository as Config;
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Console\Command;
 use Propaganistas\LaravelDisposableEmail\DisposableDomains;
 use Propaganistas\LaravelDisposableEmail\Traits\ParsesJson;
@@ -32,22 +32,22 @@ class UpdateDisposableDomainsCommand extends Command
      * @var \Propaganistas\LaravelDisposableEmail\DisposableDomains
      */
     protected $disposableDomains;
+    
+    /**		
+     * The config service.		
+     *		
+     * @var \Illuminate\Config\Repository		
+     */		
+    protected $config;		
 
-    /**
-     * The config service.
-     *
-     * @var \Illuminate\Config\Repository
-     */
-    protected $config;
-
-    /**
-     * UpdateDisposableDomainsCommand constructor.
-     *
-     * @param \Illuminate\Config\Repository $config
-     */
+    /**		
+     * UpdateDisposableDomainsCommand constructor.		
+     *		
+     * @param \Illuminate\Contracts\Config\Repository $config		
+     */		
     public function __construct(Config $config)
-    {
-        parent::__construct();
+    {		
+        parent::__construct();		
 
         $this->config = $config;
     }
