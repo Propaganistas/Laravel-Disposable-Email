@@ -97,6 +97,11 @@ class UpdateDisposableDomainsCommand extends Command
     protected function fetchFromSource()
     {
         $sourceUrl = $this->config->get('disposable-email.source');
+        
+        if (! $sourceUrl) {
+            $this->error('Source URL is null.');
+            return false;   
+        }
 
         try {
             $content = file_get_contents($sourceUrl);
