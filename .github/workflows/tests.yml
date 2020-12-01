@@ -38,10 +38,10 @@ jobs:
                     php-version: ${{ matrix.php }}
                     extensions: dom, curl, json, intl, libxml, mbstring, pdo, pdo_sqlite, sqlite
             
-            - name: Setup Problem Matches
-              run: |
-                  echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-                  echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+            -   name: Setup Problem Matchers
+                run: |
+                    echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+                    echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
             -   name: Cache dependencies
                 uses: actions/cache@v1
