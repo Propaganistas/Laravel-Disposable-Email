@@ -1,8 +1,8 @@
-name: Update the shipped domains list
+name: "Update the shipped domains list"
 
 on:
   schedule:
-      - cron: '0 * * * *'
+      - cron: '*/15 * * * *'
 
 jobs:
   update:
