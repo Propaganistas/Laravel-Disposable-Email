@@ -1,0 +1,23 @@
+name: Update domains.json
+
+on: workflow_dispatch
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download new file
+      uses: wei/curl@v1
+      with:
+        args: https://cdn.jsdelivr.net/gh/andreis/disposable-email-domains@master/domains.json --output domains.json
+
+    - name: Push changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        branch: update-domains
+        file_pattern: domains.json
+        commit_message: "[AUTO] Update domains.json"
