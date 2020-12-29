@@ -1,8 +1,6 @@
-name: "Update the shipped domains list"
+name: Update domains.json
 
-on:
-  schedule:
-      - cron: '*/15 * * * *'
+on: workflow_dispatch
 
 jobs:
   update:
