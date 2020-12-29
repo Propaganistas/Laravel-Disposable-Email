@@ -1,6 +1,8 @@
 name: Update domains.json
 
-on: workflow_dispatch
+on:
+  schedule:
+    - cron: "0 0 1 * *"
 
 jobs:
   update:
