@@ -1,6 +1,7 @@
 name: Update domains.json
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 1 * *"
 
@@ -11,6 +12,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
 
     - name: Download new file
       uses: wei/curl@v1
@@ -23,3 +26,9 @@ jobs:
         branch: master
         file_pattern: domains.json
         commit_message: "[AUTO] Update domains.json"
+  
+    - name: Bump version
+      uses: anothrNick/github-tag-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BUMP: 'patch'
