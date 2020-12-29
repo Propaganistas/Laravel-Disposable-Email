@@ -1,6 +1,8 @@
 name: Update the shipped domains list
 
-on: workflow_dispatch
+on:
+  schedule:
+      - cron: '0 * * * *'
 
 jobs:
   update:
