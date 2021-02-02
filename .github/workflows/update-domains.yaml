@@ -27,8 +27,10 @@ jobs:
         file_pattern: domains.json
         commit_message: "[AUTO] Update domains.json"
   
-    - name: Bump version
-      uses: anothrNick/github-tag-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DEFAULT_BUMP: 'patch'
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v5.1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        default_bump: 'patch'
+        tag_prefix: ''  
