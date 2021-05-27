@@ -60,3 +60,7 @@ Use the `indisposable` validator to ensure a given field doesn't hold a disposab
 ```php
 'field' => 'email|indisposable',
 ```
+
+### Custom fetches
+
+By default the package retrieves a new list by using `file_get_contents()`. If your application has different needs (e.g. when behind a proxy) please review the `disposable-domains.fetcher` configuration value.
