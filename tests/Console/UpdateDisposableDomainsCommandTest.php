@@ -61,7 +61,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertFileExists($this->storagePath);
 
         $contents = file_get_contents($this->storagePath);
-        $this->assertMatchesRegularExpression('/bar/', $contents);
+        $this->assertRegExp('/bar/', $contents);
         $this->assertNotEquals('foo', $contents);
     }
 }
