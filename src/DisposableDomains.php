@@ -6,12 +6,10 @@ use ErrorException;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Propaganistas\LaravelDisposableEmail\Traits\ParsesJson;
+use UnexpectedValueException;
 
 class DisposableDomains
 {
-    use ParsesJson;
-
     /**
      * The storage path to retrieve from and save to.
      *
@@ -65,8 +63,8 @@ class DisposableDomains
             $data = $this->getFromStorage();
         }
 
-        if ($this->cache && (! isset($inCache) || ! $inCache)) {
-            $this->cache->forever($this->getCacheKey(), $data);
+        if (! isset($inCache) || ! $inCache) {
+            $this->saveToCache($data);
         }
 
         $this->domains = $data;
@@ -82,6 +80,30 @@ class DisposableDomains
     protected function getFromCache()
     {
         return $this->cache->get($this->getCacheKey());
+    }
+
+    /**
+     * Save the domains in cache.
+     *
+     * @param  mixed  $data
+     */
+    public function saveToCache($data)
+    {
+        if ($this->cache) {
+            $this->cache->forever($this->getCacheKey(),
+                is_string($data) ? $data : json_encode($data)
+            );
+        }
+    }
+
+    /**
+     * Flushes the cache if applicable.
+     */
+    public function flushCache()
+    {
+        if ($this->cache) {
+            $this->cache->forget($this->getCacheKey());
+        }
     }
 
     /**
@@ -101,6 +123,38 @@ class DisposableDomains
 
         // Fall back to the list provided by the package.
         return $this->parseJson(file_get_contents(__DIR__.'/../domains.json'));
+    }
+
+    /**
+     * Save the domains in storage.
+     *
+     * @param  mixed  $data
+     */
+    public function saveToStorage($data)
+    {
+        if (is_string($data) && ! $this->parseJson($data)) {
+            throw new UnexpectedValueException('Provided data could not be parsed as a JSON list');
+        }
+
+        $saved = file_put_contents($this->getStoragePath(),
+            is_string($data) ? $data : json_encode($data)
+        );
+
+        if ($saved) {
+            $this->flushCache();
+        }
+
+        return $saved;
+    }
+
+    /**
+     * Flushes the source's list if applicable.
+     */
+    public function flushStorage()
+    {
+        if (is_file($this->getStoragePath())) {
+            @unlink($this->getStoragePath());
+        }
     }
 
     /**
@@ -139,26 +193,6 @@ class DisposableDomains
     public function isIndisposable($email)
     {
         return $this->isNotDisposable($email);
-    }
-
-    /**
-     * Flushes the cache if applicable.
-     */
-    public function flushCache()
-    {
-        if ($this->cache) {
-            $this->cache->forget($this->getCacheKey());
-        }
-    }
-
-    /**
-     * Flushes the source's list if applicable.
-     */
-    public function flushSource()
-    {
-        if (is_file($this->getStoragePath())) {
-            @unlink($this->getStoragePath());
-        }
     }
 
     /**
@@ -215,5 +249,22 @@ class DisposableDomains
         $this->cacheKey = $key;
 
         return $this;
+    }
+
+    /**
+     * Parses the given JSON into a native array. Returns false on errors.
+     *
+     * @param string $data
+     * @return array|bool
+     */
+    protected function parseJson($data)
+    {
+        $data = json_decode($data, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || empty($data)) {
+            return false;
+        }
+
+        return $data;
     }
 }
