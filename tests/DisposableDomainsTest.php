@@ -94,15 +94,15 @@ class DisposableDomainsTest extends TestCase
     {
         file_put_contents($this->storagePath, 'foo');
 
-        $this->disposable()->flushSource();
+        $this->disposable()->flushStorage();
 
-        $this->assertFileNotExists($this->storagePath);
+        $this->assertFileDoesNotExist($this->storagePath);
     }
 
     /** @test */
     public function it_doesnt_throw_exceptions_for_flush_source_when_file_doesnt_exist()
     {
-        $this->disposable()->flushSource();
+        $this->disposable()->flushStorage();
 
         $this->assertTrue(true);
     }

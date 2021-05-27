@@ -29,7 +29,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function tearDown(): void
     {
-        $this->disposable()->flushSource();
+        $this->disposable()->flushStorage();
         $this->disposable()->flushCache();
 
         parent::tearDown();
