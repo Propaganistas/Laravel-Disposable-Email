@@ -96,7 +96,7 @@ class DisposableDomainsTest extends TestCase
 
         $this->disposable()->flushStorage();
 
-        $this->assertFileDoesNotExist($this->storagePath);
+        $this->assertFileNotExists($this->storagePath);
     }
 
     /** @test */

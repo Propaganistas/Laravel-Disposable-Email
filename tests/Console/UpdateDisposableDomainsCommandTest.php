@@ -10,12 +10,12 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     /** @test */
     public function it_creates_the_file()
     {
-        $this->assertFileDoesNotExist($this->storagePath);
+        $this->assertFileNotExists($this->storagePath);
 
         $this->artisan('disposable:update');
 
         $this->assertFileExists($this->storagePath);
-        $this->assertMatchesRegularExpression('/yopmail.com/', file_get_contents($this->storagePath));
+        $this->assertRegexp('/yopmail.com/', file_get_contents($this->storagePath));
     }
 
     /** @test */
@@ -28,7 +28,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertFileExists($this->storagePath);
 
         $contents = file_get_contents($this->storagePath);
-        $this->assertMatchesRegularExpression('/yopmail.com/', $contents);
+        $this->assertRegexp('/yopmail.com/', $contents);
         $this->assertNotEquals('foo', $contents);
     }
 
