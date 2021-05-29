@@ -3,8 +3,8 @@
 namespace Propaganistas\LaravelDisposableEmail\Tests\Console;
 
 use InvalidArgumentException;
+use Propaganistas\LaravelDisposableEmail\Contracts\Fetcher;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
-use UnexpectedValueException;
 
 class UpdateDisposableDomainsCommandTest extends TestCase
 {
@@ -13,7 +13,8 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     {
         $this->assertFileNotExists($this->storagePath);
 
-        $this->artisan('disposable:update');
+        $this->artisan('disposable:update')
+            ->assertExitCode(0);
 
         $this->assertFileExists($this->storagePath);
 
@@ -26,9 +27,10 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     /** @test */
     public function it_overwrites_the_file()
     {
-        file_put_contents($this->storagePath, 'foo');
+        file_put_contents($this->storagePath, json_encode(['foo']));
 
-        $this->artisan('disposable:update');
+        $this->artisan('disposable:update')
+            ->assertExitCode(0);
 
         $this->assertFileExists($this->storagePath);
 
@@ -45,32 +47,12 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Source URL is null');
 
-        file_put_contents($this->storagePath, 'foo');
+        file_put_contents($this->storagePath, json_encode(['foo']));
 
         $this->app['config']['disposable-email.source'] = null;
 
-        $this->artisan('disposable:update');
-
-        $this->assertFileExists($this->storagePath);
-
-        $domains = $this->disposable()->getDomains();
-
-        $this->assertIsArray($domains);
-        $this->assertEquals(['foo'], $domains);
-    }
-
-    /** @test */
-    public function it_cannot_use_a_custom_fetcher_with_string_result()
-    {
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Provided data could not be parsed as a JSON list');
-
-        file_put_contents($this->storagePath, 'foo');
-
-        $this->app['config']['disposable-email.source'] = 'bar';
-        $this->app['config']['disposable-email.fetcher'] = CustomFetcherWithStringResult::class;
-
-        $this->artisan('disposable:update');
+        $this->artisan('disposable:update')
+            ->assertExitCode(1);
 
         $this->assertFileExists($this->storagePath);
 
@@ -79,64 +61,52 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     }
 
     /** @test */
-    public function it_can_use_a_custom_fetcher_with_json_result()
+    public function custom_fetchers_need_fetcher_contract()
     {
-        file_put_contents($this->storagePath, 'foo');
+        file_put_contents($this->storagePath, json_encode(['foo']));
 
         $this->app['config']['disposable-email.source'] = 'bar';
-        $this->app['config']['disposable-email.fetcher'] = CustomFetcherWithJSONResult::class;
+        $this->app['config']['disposable-email.fetcher'] = InvalidFetcher::class;
 
-        $this->artisan('disposable:update');
+        $this->artisan('disposable:update')
+            ->assertExitCode(1);
 
         $this->assertFileExists($this->storagePath);
 
         $domains = $this->disposable()->getDomains();
-
-        $this->assertIsArray($domains);
-        $this->assertEquals(['bar'], $domains);
         $this->assertNotEquals(['foo'], $domains);
     }
 
     /** @test */
-    public function it_can_use_a_custom_fetcher_with_array_result()
+    public function it_can_use_a_custom_fetcher()
     {
-        file_put_contents($this->storagePath, 'foo');
+        file_put_contents($this->storagePath, json_encode(['foo']));
 
         $this->app['config']['disposable-email.source'] = 'bar';
-        $this->app['config']['disposable-email.fetcher'] = CustomFetcherWithArrayResult::class;
+        $this->app['config']['disposable-email.fetcher'] = CustomFetcher::class;
 
-        $this->artisan('disposable:update');
+        $this->artisan('disposable:update')
+            ->assertExitCode(0);
 
         $this->assertFileExists($this->storagePath);
 
         $domains = $this->disposable()->getDomains();
-
-        $this->assertIsArray($domains);
         $this->assertEquals(['bar'], $domains);
-        $this->assertNotEquals(['foo'], $domains);
     }
 }
 
-class CustomFetcherWithStringResult
+class CustomFetcher implements Fetcher
+{
+    public function handle($url): array
+    {
+        return [$url];
+    }
+}
+
+class InvalidFetcher
 {
     public function handle($url)
     {
         return $url;
-    }
-}
-
-class CustomFetcherWithJSONResult
-{
-    public function handle($url)
-    {
-        return json_encode($url);
-    }
-}
-
-class CustomFetcherWithArrayResult
-{
-    public function handle($url)
-    {
-        return [$url];
     }
 }

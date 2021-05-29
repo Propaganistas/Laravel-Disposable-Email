@@ -63,4 +63,5 @@ Use the `indisposable` validator to ensure a given field doesn't hold a disposab
 
 ### Custom fetches
 
-By default the package retrieves a new list by using `file_get_contents()`. If your application has different needs (e.g. when behind a proxy) please review the `disposable-email.fetcher` configuration value.
+By default the package retrieves a new list by using `file_get_contents()`. 
+If your application has different needs (e.g. when behind a proxy) please review the `disposable-email.fetcher` configuration value.

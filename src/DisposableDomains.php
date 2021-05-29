@@ -2,11 +2,9 @@
 
 namespace Propaganistas\LaravelDisposableEmail;
 
-use ErrorException;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use UnexpectedValueException;
 
 class DisposableDomains
 {
@@ -58,8 +56,9 @@ class DisposableDomains
         $domains = $this->getFromCache();
 
         if (! $domains) {
-            $domains = $this->getFromStorage();
-            $this->saveToCache($domains);
+            $this->saveToCache(
+                $domains = $this->getFromStorage()
+            );
         }
 
         $this->domains = $domains;
@@ -76,8 +75,14 @@ class DisposableDomains
     {
         if ($this->cache) {
             $domains = $this->cache->get($this->getCacheKey());
-            
-            return is_string($domains) ? json_decode($domains) : $domains;
+
+            // @TODO: Legacy code for bugfix. Remove me.
+            if (is_string($domains) || empty($domains)) {
+                $this->flushCache();
+                return null;
+            }
+
+            return $domains;
         }
 
         return null;
@@ -86,12 +91,12 @@ class DisposableDomains
     /**
      * Save the domains in cache.
      *
-     * @param  mixed  $data
+     * @param  array|null  $domains
      */
-    public function saveToCache($data)
+    public function saveToCache(array $domains = null)
     {
-        if ($this->cache) {
-            $this->cache->forever($this->getCacheKey(), $data);
+        if ($this->cache && ! empty($domains)) {
+            $this->cache->forever($this->getCacheKey(), $domains);
         }
     }
 
@@ -112,34 +117,21 @@ class DisposableDomains
      */
     protected function getFromStorage()
     {
-        if (is_file($this->getStoragePath())) {
-            $domains = $this->parseJson(
-                file_get_contents($this->getStoragePath())
-            );
+        $domains = is_file($this->getStoragePath())
+            ? file_get_contents($this->getStoragePath())
+            : file_get_contents(__DIR__.'/../domains.json');
 
-            if ($domains) {
-                return Arr::wrap($domains);
-            }
-        }
-
-        // Fall back to the list provided by the package.
-        return $this->parseJson(file_get_contents(__DIR__.'/../domains.json'));
+        return json_decode($domains, true);
     }
 
     /**
      * Save the domains in storage.
      *
-     * @param  mixed  $data
+     * @param  array  $domains
      */
-    public function saveToStorage($data)
+    public function saveToStorage(array $domains)
     {
-        if (is_string($data) && ! $this->parseJson($data)) {
-            throw new UnexpectedValueException('Provided data could not be parsed as a JSON list');
-        }
-
-        $saved = file_put_contents($this->getStoragePath(),
-            is_string($data) ? $data : json_encode($data)
-        );
+        $saved = file_put_contents($this->getStoragePath(), json_encode($domains));
 
         if ($saved) {
             $this->flushCache();
@@ -250,22 +242,5 @@ class DisposableDomains
         $this->cacheKey = $key;
 
         return $this;
-    }
-
-    /**
-     * Parses the given JSON into a native array. Returns false on errors.
-     *
-     * @param string $data
-     * @return array|bool
-     */
-    protected function parseJson($data)
-    {
-        $data = json_decode($data, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE || empty($data)) {
-            return false;
-        }
-
-        return $data;
     }
 }

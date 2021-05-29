@@ -24,10 +24,11 @@ return [
     |
     | The class responsible for fetching the contents of the source url.
     | The default implementation makes use of file_get_contents and
-    | will suffice for most applications.
+    | json_decode and will probably suffice for most applications.
     |
     | If your application has different needs (e.g. behind a proxy) then you
     | can define a custom fetch class here that carries out the fetching.
+    | Your custom class should implement the Fetcher contract.
     |
     */
 

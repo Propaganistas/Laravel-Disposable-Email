@@ -61,21 +61,17 @@ class DisposableDomainsTest extends TestCase
 
         $domains = $this->disposable()->getDomains();
 
-        $this->assertIsArray($domains);
         $this->assertEquals(['foo'], $domains);
     }
     
     /** @test */
-    public function it_handles_a_cached_json_string()
+    public function it_flushes_invalid_cache_values()
     {
-        $this->app['cache.store'][$this->disposable()->getCacheKey()] = json_encode(['foo']);
+        $this->app['cache.store'][$this->disposable()->getCacheKey()] = 'foo';
 
         $this->disposable()->bootstrap();
 
-        $domains = $this->disposable()->getDomains();
-
-        $this->assertIsArray($domains);
-        $this->assertEquals(['foo'], $domains);
+        $this->assertNotEquals('foo', $this->app['cache.store'][$this->disposable()->getCacheKey()]);
     }
 
     /** @test */
@@ -97,23 +93,11 @@ class DisposableDomainsTest extends TestCase
 
         file_put_contents($this->storagePath, json_encode(['foo']));
 
+        $this->disposable()->bootstrap();
+
         $domains = $this->disposable()->getDomains();
 
-        $this->assertIsArray($domains);
         $this->assertEquals(['foo'], $domains);
-    }
-
-    /** @test */
-    public function it_casts_storage_domains_to_array()
-    {
-        $this->app['config']['disposable-email.cache.enabled'] = false;
-
-        file_put_contents($this->storagePath, json_encode('foo,bar'));
-
-        $domains = $this->disposable()->getDomains();
-
-        $this->assertIsArray($domains);
-        $this->assertEquals(['foo,bar'], $domains);
     }
 
     /** @test */

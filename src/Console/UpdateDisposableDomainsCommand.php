@@ -4,6 +4,7 @@ namespace Propaganistas\LaravelDisposableEmail\Console;
 
 use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Console\Command;
+use Propaganistas\LaravelDisposableEmail\Contracts\Fetcher;
 use Propaganistas\LaravelDisposableEmail\DisposableDomains;
 
 class UpdateDisposableDomainsCommand extends Command
@@ -34,8 +35,13 @@ class UpdateDisposableDomainsCommand extends Command
         $this->line('Fetching from source...');
 
         $fetcher = $this->laravel->make(
-            $config->get('disposable-email.fetcher')
+            $fetcherClass = $config->get('disposable-email.fetcher')
         );
+
+        if (! $fetcher instanceof Fetcher) {
+            $this->error($fetcherClass . ' should implement ' . Fetcher::class);
+            return 1;
+        }
 
         $data = $this->laravel->call([$fetcher, 'handle'], [
             'url' => $config->get('disposable-email.source'),
@@ -46,8 +52,10 @@ class UpdateDisposableDomainsCommand extends Command
         if ($disposable->saveToStorage($data)) {
             $this->info('Disposable domains list updated successfully.');
             $disposable->bootstrap();
+            return 0;
         } else {
             $this->error('Could not write to storage ('.$disposable->getStoragePath().')!');
+            return 1;
         }
     }
 }
