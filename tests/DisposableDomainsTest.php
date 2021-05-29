@@ -64,6 +64,19 @@ class DisposableDomainsTest extends TestCase
         $this->assertIsArray($domains);
         $this->assertEquals(['foo'], $domains);
     }
+    
+    /** @test */
+    public function it_handles_a_cached_json_string()
+    {
+        $this->app['cache.store'][$this->disposable()->getCacheKey()] = json_encode(['foo']);
+
+        $this->disposable()->bootstrap();
+
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
+        $this->assertEquals(['foo'], $domains);
+    }
 
     /** @test */
     public function it_skips_cache_when_configured()
