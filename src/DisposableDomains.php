@@ -55,19 +55,14 @@ class DisposableDomains
      */
     public function bootstrap()
     {
-        if ($this->cache) {
-            $data = $inCache = $this->getFromCache();
+        $domains = $this->getFromCache();
+
+        if (! $domains) {
+            $domains = $this->getFromStorage();
+            $this->saveToCache($domains);
         }
 
-        if (! isset($data) || ! $data) {
-            $data = $this->getFromStorage();
-        }
-
-        if (! isset($inCache) || ! $inCache) {
-            $this->saveToCache($data);
-        }
-
-        $this->domains = $data;
+        $this->domains = $domains;
 
         return $this;
     }
@@ -79,7 +74,11 @@ class DisposableDomains
      */
     protected function getFromCache()
     {
-        return $this->cache->get($this->getCacheKey());
+        if ($this->cache) {
+            return $this->cache->get($this->getCacheKey());
+        }
+
+        return null;
     }
 
     /**
@@ -113,12 +112,14 @@ class DisposableDomains
      */
     protected function getFromStorage()
     {
-        try {
-            if ($data = $this->parseJson(file_get_contents($this->getStoragePath()))) {
-                return $data;
+        if (is_file($this->getStoragePath())) {
+            $domains = $this->parseJson(
+                file_get_contents($this->getStoragePath())
+            );
+
+            if ($domains) {
+                return Arr::wrap($domains);
             }
-        } catch (ErrorException $e) {
-            // File does not exist or could not be opened.
         }
 
         // Fall back to the list provided by the package.

@@ -59,7 +59,10 @@ class DisposableDomainsTest extends TestCase
 
         $this->disposable()->bootstrap();
 
-        $this->assertEquals(['foo'], $this->disposable()->getDomains());
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
+        $this->assertEquals(['foo'], $domains);
     }
 
     /** @test */
@@ -67,30 +70,52 @@ class DisposableDomainsTest extends TestCase
     {
         $this->app['config']['disposable-email.cache.enabled'] = false;
 
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
         $this->assertNull($this->app['cache.store'][$this->disposable()->getCacheKey()]);
-        $this->assertContains('yopmail.com',  $this->disposable()->getDomains());
+        $this->assertContains('yopmail.com',  $domains);
     }
 
     /** @test */
-    public function it_takes_source_domains_when_cache_is_not_available()
+    public function it_takes_storage_domains_when_cache_is_not_available()
     {
         $this->app['config']['disposable-email.cache.enabled'] = false;
 
         file_put_contents($this->storagePath, json_encode(['foo']));
 
-        $this->assertEquals(['foo'], $this->disposable()->getDomains());
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
+        $this->assertEquals(['foo'], $domains);
     }
 
     /** @test */
-    public function it_takes_package_domains_when_source_is_not_available()
+    public function it_casts_storage_domains_to_array()
     {
         $this->app['config']['disposable-email.cache.enabled'] = false;
 
-        $this->assertContains('yopmail.com', $this->disposable()->getDomains());
+        file_put_contents($this->storagePath, json_encode('foo,bar'));
+
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
+        $this->assertEquals(['foo,bar'], $domains);
     }
 
     /** @test */
-    public function it_can_flush_source()
+    public function it_takes_package_domains_when_storage_is_not_available()
+    {
+        $this->app['config']['disposable-email.cache.enabled'] = false;
+
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
+        $this->assertContains('yopmail.com', $domains);
+    }
+
+    /** @test */
+    public function it_can_flush_storage()
     {
         file_put_contents($this->storagePath, 'foo');
 
@@ -100,7 +125,7 @@ class DisposableDomainsTest extends TestCase
     }
 
     /** @test */
-    public function it_doesnt_throw_exceptions_for_flush_source_when_file_doesnt_exist()
+    public function it_doesnt_throw_exceptions_for_flush_storage_when_file_doesnt_exist()
     {
         $this->disposable()->flushStorage();
 
