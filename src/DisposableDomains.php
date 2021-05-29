@@ -75,7 +75,9 @@ class DisposableDomains
     protected function getFromCache()
     {
         if ($this->cache) {
-            return $this->cache->get($this->getCacheKey());
+            $domains = $this->cache->get($this->getCacheKey());
+            
+            return is_string($domains) ? json_decode($domains) : $domains;
         }
 
         return null;
@@ -89,9 +91,7 @@ class DisposableDomains
     public function saveToCache($data)
     {
         if ($this->cache) {
-            $this->cache->forever($this->getCacheKey(),
-                is_string($data) ? $data : json_encode($data)
-            );
+            $this->cache->forever($this->getCacheKey(), $data);
         }
     }
 
