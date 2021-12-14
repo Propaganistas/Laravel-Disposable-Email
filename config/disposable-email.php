@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'source' => 'https://cdn.jsdelivr.net/gh/andreis/disposable-email-domains@master/domains.json',
+    'source' => 'https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json',
 
     /*
     |--------------------------------------------------------------------------
