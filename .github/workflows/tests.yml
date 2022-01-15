@@ -30,7 +30,7 @@ jobs:
           - php: 8.1
             laravel: 7
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
+    name: P${{ matrix.php }} Laravel ${{ matrix.laravel }} (${{ matrix.stability }})
 
     steps:
       - name: Checkout code
@@ -46,7 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "illuminate/support:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "illuminate/support=^${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
