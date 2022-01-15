@@ -44,5 +44,7 @@
                 "Propaganistas\\LaravelDisposableEmail\\DisposableEmailServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
