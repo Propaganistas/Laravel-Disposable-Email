@@ -30,11 +30,17 @@ jobs:
           extensions: dom, curl, json, libxml, mbstring, zip
           tools: composer:v2
           coverage: none
-      
+
       - name: Patch testbench version
-        if: matrix.php == 8.1 && matrix.laravel == 8
+        if: matrix.laravel == 8
         run: |
           composer require "orchestra/testbench=^6.23" --dev --no-interaction --no-update
+
+      # https://github.com/briannesbitt/Carbon/releases/tag/2.62.1
+      - name: Patch Carbon version
+        if: matrix.php == 8.2
+        run: |
+          composer require "nesbot/carbon=^2.63" --dev --no-interaction --no-update
 
       - name: Install dependencies
         run: |
