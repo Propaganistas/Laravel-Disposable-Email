@@ -29,8 +29,10 @@ class DisposableEmailServiceProvider extends ServiceProvider
         $this->publishes([
             $this->config => config_path('disposable-email.php'),
         ], 'laravel-disposable-email');
-
-        $this->app['validator']->extend('indisposable', Indisposable::class.'@validate', Indisposable::$errorMessage);
+        
+        $this->callAfterResolving('validator', function (Factory $validator) {
+            $validator->extend('indisposable', Indisposable::class.'@validate', Indisposable::$errorMessage);
+        });
     }
 
     /**
