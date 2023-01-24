@@ -3,6 +3,7 @@
 namespace Propaganistas\LaravelDisposableEmail;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Factory;
 use Propaganistas\LaravelDisposableEmail\Console\UpdateDisposableDomainsCommand;
 use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
 
