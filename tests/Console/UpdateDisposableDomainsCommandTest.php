@@ -11,7 +11,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     /** @test */
     public function it_creates_the_file()
     {
-        $this->assertFileNotExists($this->storagePath);
+        $this->assertFileDoesNotExist($this->storagePath);
 
         $this->artisan('disposable:update')
             ->assertExitCode(0);
