@@ -20,17 +20,15 @@ jobs:
       with:
         args: https://cdn.jsdelivr.net/gh/andreis/disposable-email-domains@master/domains.json --output domains.json
 
+    - name: Determine next patch version
+      id: versioning
+      run: |
+        echo "next_patch=$(git describe --tags --abbrev=0 | awk -F. '{OFS="."; $NF+=1; print $0}')" >> $GITHUB_OUTPUT
+
     - name: Push changes
       uses: stefanzweifel/git-auto-commit-action@v4
       with:
         branch: master
         file_pattern: domains.json
         commit_message: "[AUTO] Update domains.json"
-  
-    - name: Bump version and push tag
-      id: tag_version
-      uses: mathieudutour/github-tag-action@v5.1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        default_bump: 'patch'
-        tag_prefix: ''  
+        tagging_message: ${{ steps.versioning.outputs.next_patch }}
