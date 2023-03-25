@@ -4,6 +4,7 @@ namespace Propaganistas\LaravelDisposableEmail;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory;
+use Propaganistas\LaravelDisposableEmail\Console\StatusDisposableDomainsCommand;
 use Propaganistas\LaravelDisposableEmail\Console\UpdateDisposableDomainsCommand;
 use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
 
@@ -25,6 +26,7 @@ class DisposableEmailServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands(UpdateDisposableDomainsCommand::class);
+            $this->commands(StatusDisposableDomainsCommand::class);
         }
 
         $this->publishes([

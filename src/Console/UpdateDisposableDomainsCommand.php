@@ -52,10 +52,11 @@ class UpdateDisposableDomainsCommand extends Command
         if ($disposable->saveToStorage($data)) {
             $this->info('Disposable domains list updated successfully.');
             $disposable->bootstrap();
+            $this->call('disposable:status');
             return 0;
-        } else {
-            $this->error('Could not write to storage ('.$disposable->getStoragePath().')!');
-            return 1;
         }
+
+        $this->error('Could not write to storage (' . $disposable->getStoragePath() . ')!');
+        return 1;
     }
 }
