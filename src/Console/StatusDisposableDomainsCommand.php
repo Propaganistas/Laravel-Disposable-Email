@@ -43,7 +43,7 @@ class StatusDisposableDomainsCommand extends Command
         $linesCount = count($disposable->getDomains());
 
         $this->info('Last updated disposable domains list at: ' . $lastUpdate);
-        $this->info('Number of disposable domains founded: ' . $linesCount);
+        $this->info('Number of disposable domains founded: ' . $linesCount . ' domains');
         return 0;
     }
 }

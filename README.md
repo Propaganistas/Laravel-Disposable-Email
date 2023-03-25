@@ -53,6 +53,12 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
 	}
     ```
 
+7. (optional) You can see the disposable domains list status running the following artisan command:
+    
+    ```bash
+    php artisan disposable:status
+    ```
+
 ### Usage
 
 Use the `indisposable` validator to ensure a given field doesn't hold a disposable email address. You'll probably want to add it after the `email` validator to make sure a valid email is passed through:
