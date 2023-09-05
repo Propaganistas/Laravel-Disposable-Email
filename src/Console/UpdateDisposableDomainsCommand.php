@@ -43,13 +43,18 @@ class UpdateDisposableDomainsCommand extends Command
             return 1;
         }
 
-        if (! is_array($config->get('disposable-email.sources'))) {
+        $sources = $config->get('disposable-email.sources');
+        if (!$sources && $config->get('disposable-email.source')) {
+            $sources = [$config->get('disposable-email.source')];
+        }
+
+        if (! is_array($sources)) {
             $this->error('Source URLs should be defined in an array');
             return 1;
         }
 
         $data = [];
-        foreach ($config->get('disposable-email.sources') as $source) {
+        foreach ($sources as $source) {
             $data = array_merge($data, $this->laravel->call([$fetcher, 'handle'], [
                 'url' => $source,
             ]));
