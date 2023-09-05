@@ -43,9 +43,22 @@ class UpdateDisposableDomainsCommand extends Command
             return 1;
         }
 
-        $data = $this->laravel->call([$fetcher, 'handle'], [
-            'url' => $config->get('disposable-email.source'),
-        ]);
+        $sources = $config->get('disposable-email.sources');
+        if (!$sources && $config->get('disposable-email.source')) {
+            $sources = [$config->get('disposable-email.source')];
+        }
+
+        if (! is_array($sources)) {
+            $this->error('Source URLs should be defined in an array');
+            return 1;
+        }
+
+        $data = [];
+        foreach ($sources as $source) {
+            $data = array_merge($data, $this->laravel->call([$fetcher, 'handle'], [
+                'url' => $source,
+            ]));
+        }
 
         $this->line('Saving response to storage...');
 
@@ -54,7 +67,7 @@ class UpdateDisposableDomainsCommand extends Command
             $disposable->bootstrap();
             return 0;
         } else {
-            $this->error('Could not write to storage ('.$disposable->getStoragePath().')!');
+            $this->error('Could not write to storage (' . $disposable->getStoragePath() . ')!');
             return 1;
         }
     }
