@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | JSON Source URL
+    | JSON Source URLs
     |--------------------------------------------------------------------------
     |
     | The source URL yielding a list of disposable email domains. Change this
@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'source' => 'https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json',
+    'sources' => ['https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json'],
 
     /*
     |--------------------------------------------------------------------------

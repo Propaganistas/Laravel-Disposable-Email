@@ -49,7 +49,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
 
         file_put_contents($this->storagePath, json_encode(['foo']));
 
-        $this->app['config']['disposable-email.source'] = null;
+        $this->app['config']['disposable-email.sources'] = [null];
 
         $this->artisan('disposable:update')
             ->assertExitCode(1);
@@ -65,8 +65,24 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
 
-        $this->app['config']['disposable-email.source'] = 'bar';
+        $this->app['config']['disposable-email.sources'] = ['bar'];
         $this->app['config']['disposable-email.fetcher'] = InvalidFetcher::class;
+
+        $this->artisan('disposable:update')
+            ->assertExitCode(1);
+
+        $this->assertFileExists($this->storagePath);
+
+        $domains = $this->disposable()->getDomains();
+        $this->assertNotEquals(['foo'], $domains);
+    }
+
+    /** @test */
+    public function custom_source_is_not_array()
+    {
+        file_put_contents($this->storagePath, json_encode(['foo']));
+
+        $this->app['config']['disposable-email.sources'] = 'bar';
 
         $this->artisan('disposable:update')
             ->assertExitCode(1);
@@ -82,7 +98,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
 
-        $this->app['config']['disposable-email.source'] = 'bar';
+        $this->app['config']['disposable-email.sources'] = ['bar'];
         $this->app['config']['disposable-email.fetcher'] = CustomFetcher::class;
 
         $this->artisan('disposable:update')
