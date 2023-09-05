@@ -28,7 +28,7 @@ class UpdateDisposableDomainsCommand extends Command
      *
      * @param  \Illuminate\Contracts\Config\Repository  $config
      * @param  \Propaganistas\LaravelDisposableEmail\DisposableDomains  $disposable
-     * @return  void
+     * @return  int
      */
     public function handle(Config $config, DisposableDomains $disposable)
     {
@@ -40,17 +40,18 @@ class UpdateDisposableDomainsCommand extends Command
 
         if (! $fetcher instanceof Fetcher) {
             $this->error($fetcherClass . ' should implement ' . Fetcher::class);
-            return 1;
+            return Command::FAILURE;
         }
 
         $sources = $config->get('disposable-email.sources');
+
         if (!$sources && $config->get('disposable-email.source')) {
             $sources = [$config->get('disposable-email.source')];
         }
 
         if (! is_array($sources)) {
             $this->error('Source URLs should be defined in an array');
-            return 1;
+            return Command::FAILURE;
         }
 
         $data = [];
@@ -62,13 +63,15 @@ class UpdateDisposableDomainsCommand extends Command
 
         $this->line('Saving response to storage...');
 
-        if ($disposable->saveToStorage($data)) {
-            $this->info('Disposable domains list updated successfully.');
-            $disposable->bootstrap();
-            return 0;
-        } else {
+        if (! $disposable->saveToStorage($data)) {
             $this->error('Could not write to storage (' . $disposable->getStoragePath() . ')!');
-            return 1;
+            return Command::FAILURE;
         }
+
+        $this->info('Disposable domains list updated successfully.');
+
+        $disposable->bootstrap();
+
+        return Command::SUCCESS;
     }
 }

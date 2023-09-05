@@ -7,15 +7,17 @@ return [
     | JSON Source URLs
     |--------------------------------------------------------------------------
     |
-    | The source URL yielding a list of disposable email domains. Change this
-    | to whatever source you like. Just make sure it returns a JSON array.
+    | The source URLs yielding a list of disposable email domains. Change these
+    | to whatever source you like. Just make sure they all return a JSON array.
     |
     | A sensible default is provided using jsDelivr's services. jsDelivr is
     | a free service, so there are no uptime or support guarantees.
     |
     */
 
-    'sources' => ['https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json'],
+    'sources' => [
+        'https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json'
+    ],
 
     /*
     |--------------------------------------------------------------------------

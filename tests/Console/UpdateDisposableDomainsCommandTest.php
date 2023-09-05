@@ -61,6 +61,23 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     }
 
     /** @test */
+    public function it_can_use_a_custom_fetcher()
+    {
+        file_put_contents($this->storagePath, json_encode(['foo']));
+
+        $this->app['config']['disposable-email.sources'] = ['bar'];
+        $this->app['config']['disposable-email.fetcher'] = CustomFetcher::class;
+
+        $this->artisan('disposable:update')
+            ->assertExitCode(0);
+
+        $this->assertFileExists($this->storagePath);
+
+        $domains = $this->disposable()->getDomains();
+        $this->assertEquals(['bar'], $domains);
+    }
+
+    /** @test */
     public function custom_fetchers_need_fetcher_contract()
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
@@ -78,27 +95,12 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     }
 
     /** @test */
-    public function custom_source_is_not_array()
+    public function it_processes_legacy_source_config()
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
 
-        $this->app['config']['disposable-email.sources'] = 'bar';
-
-        $this->artisan('disposable:update')
-            ->assertExitCode(1);
-
-        $this->assertFileExists($this->storagePath);
-
-        $domains = $this->disposable()->getDomains();
-        $this->assertNotEquals(['foo'], $domains);
-    }
-
-    /** @test */
-    public function it_can_use_a_custom_fetcher()
-    {
-        file_put_contents($this->storagePath, json_encode(['foo']));
-
-        $this->app['config']['disposable-email.sources'] = ['bar'];
+        $this->app['config']['disposable-email.sources'] = null;
+        $this->app['config']['disposable-email.source'] = 'bar';
         $this->app['config']['disposable-email.fetcher'] = CustomFetcher::class;
 
         $this->artisan('disposable:update')
