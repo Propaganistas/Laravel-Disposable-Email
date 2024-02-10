@@ -30,7 +30,7 @@ class DisposableEmailServiceProvider extends ServiceProvider
         $this->publishes([
             $this->config => config_path('disposable-email.php'),
         ], 'laravel-disposable-email');
-        
+
         $this->callAfterResolving('validator', function (Factory $validator) {
             $validator->extend('indisposable', Indisposable::class.'@validate', Indisposable::$errorMessage);
         });
@@ -56,6 +56,7 @@ class DisposableEmailServiceProvider extends ServiceProvider
 
             $instance->setStoragePath($app['config']['disposable-email.storage']);
             $instance->setCacheKey($app['config']['disposable-email.cache.key']);
+            $instance->setWhitelist($app['config']['disposable-email.whitelist']);
 
             return $instance->bootstrap();
         });
