@@ -37,6 +37,13 @@ class DisposableDomains
     protected $cacheKey;
 
     /**
+     * The whitelist of domains to allow.
+     *
+     * @var array
+     */
+    protected $whitelist;
+
+    /**
      * Disposable constructor.
      *
      * @param \Illuminate\Contracts\Cache\Repository|null $cache
@@ -121,7 +128,15 @@ class DisposableDomains
             ? file_get_contents($this->getStoragePath())
             : file_get_contents(__DIR__.'/../domains.json');
 
-        return json_decode($domains, true);
+        $domains = json_decode($domains, true);
+
+        if ($this->getWhitelist()) {
+            $domains = array_filter($domains, function ($domain) {
+                return ! in_array($domain, $this->getWhitelist());
+            });
+        }
+
+        return $domains;
     }
 
     /**
@@ -240,6 +255,29 @@ class DisposableDomains
     public function setCacheKey($key)
     {
         $this->cacheKey = $key;
+
+        return $this;
+    }
+
+    /**
+     * Get the whitelist.
+     *
+     * @return array
+     */
+    public function getWhitelist()
+    {
+        return $this->whitelist;
+    }
+
+    /**
+     * Set the whitelist.
+     *
+     * @param array $whitelist
+     * @return $this
+     */
+    public function setWhitelist($whitelist)
+    {
+        $this->whitelist = $whitelist;
 
         return $this;
     }

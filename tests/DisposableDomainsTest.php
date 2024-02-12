@@ -63,7 +63,7 @@ class DisposableDomainsTest extends TestCase
 
         $this->assertEquals(['foo'], $domains);
     }
-    
+
     /** @test */
     public function it_flushes_invalid_cache_values()
     {
@@ -159,5 +159,18 @@ class DisposableDomainsTest extends TestCase
         $this->assertTrue($this->disposable()->isDisposable('example@mailinator.com'));
         $this->assertTrue($this->disposable()->isDisposable('example@mail.mailinator.com'));
         $this->assertTrue($this->disposable()->isNotDisposable('example@isnotdisposable.mailinator.com'));
+    }
+
+    /** @test */
+    public function it_can_exclude_whitelisted_domains_when_configured()
+    {
+        $this->disposable()->setWhitelist(['mailinator.com']);
+        $this->disposable()->bootstrap();
+
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
+        $this->assertNotContains('mailinator.com', $domains);
+        $this->assertTrue($this->disposable()->isNotDisposable('example@mailinator.com'));
     }
 }
