@@ -49,6 +49,21 @@ return [
 
     'storage' => storage_path('framework/disposable_domains.json'),
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Whitelist Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define a list of whitelist domains that should be allowed.
+    | These domains will be removed from the list of disposable domains.
+    |
+    | Insert as "mydomain.com", without the @ symbol.
+    |
+    */
+
+    'whitelist' => [],
+
     /*
     |--------------------------------------------------------------------------
     | Cache Configuration
@@ -68,18 +83,5 @@ return [
         'store' => 'default',
         'key' => 'disposable_email:domains',
     ],
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Whitelist Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may define a list of whitelist domains that should be allowed.
-    | These domains will be removed from the list of disposable domains.
-    |
-    */
-
-    'whitelist' => [],
 
 ];

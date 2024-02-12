@@ -162,15 +162,15 @@ class DisposableDomainsTest extends TestCase
     }
 
     /** @test */
-    public function it_can_exclude_whitelisted_domains_when_configured()
+    public function it_can_exclude_whitelisted_domains()
     {
-        $this->disposable()->setWhitelist(['mailinator.com']);
+        $this->disposable()->setWhitelist(['yopmail.com']);
         $this->disposable()->bootstrap();
 
         $domains = $this->disposable()->getDomains();
 
         $this->assertIsArray($domains);
-        $this->assertNotContains('mailinator.com', $domains);
-        $this->assertTrue($this->disposable()->isNotDisposable('example@mailinator.com'));
+        $this->assertNotContains('yopmail.com', $domains);
+        $this->assertTrue($this->disposable()->isNotDisposable('example@yopmail.com'));
     }
 }

@@ -23,6 +23,13 @@ class DisposableDomains
     protected $domains = [];
 
     /**
+     * The whitelist of domains to allow.
+     *
+     * @var array
+     */
+    protected $whitelist = [];
+
+    /**
      * The cache repository.
      *
      * @var \Illuminate\Contracts\Cache\Repository|null
@@ -35,13 +42,6 @@ class DisposableDomains
      * @var string
      */
     protected $cacheKey;
-
-    /**
-     * The whitelist of domains to allow.
-     *
-     * @var array
-     */
-    protected $whitelist;
 
     /**
      * Disposable constructor.
@@ -128,15 +128,10 @@ class DisposableDomains
             ? file_get_contents($this->getStoragePath())
             : file_get_contents(__DIR__.'/../domains.json');
 
-        $domains = json_decode($domains, true);
-
-        if ($this->getWhitelist()) {
-            $domains = array_filter($domains, function ($domain) {
-                return ! in_array($domain, $this->getWhitelist());
-            });
-        }
-
-        return $domains;
+        return array_diff(
+            json_decode($domains, true),
+            $this->getWhitelist()
+        );
     }
 
     /**
@@ -214,6 +209,29 @@ class DisposableDomains
     }
 
     /**
+     * Get the whitelist.
+     *
+     * @return array
+     */
+    public function getWhitelist()
+    {
+        return $this->whitelist;
+    }
+
+    /**
+     * Set the whitelist.
+     *
+     * @param array $whitelist
+     * @return $this
+     */
+    public function setWhitelist(array $whitelist)
+    {
+        $this->whitelist = $whitelist;
+
+        return $this;
+    }
+
+    /**
      * Get the storage path.
      *
      * @return string
@@ -255,29 +273,6 @@ class DisposableDomains
     public function setCacheKey($key)
     {
         $this->cacheKey = $key;
-
-        return $this;
-    }
-
-    /**
-     * Get the whitelist.
-     *
-     * @return array
-     */
-    public function getWhitelist()
-    {
-        return $this->whitelist;
-    }
-
-    /**
-     * Set the whitelist.
-     *
-     * @param array $whitelist
-     * @return $this
-     */
-    public function setWhitelist($whitelist)
-    {
-        $this->whitelist = $whitelist;
 
         return $this;
     }
