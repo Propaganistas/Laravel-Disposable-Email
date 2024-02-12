@@ -83,7 +83,7 @@ class DisposableDomainsTest extends TestCase
 
         $this->assertIsArray($domains);
         $this->assertNull($this->app['cache.store'][$this->disposable()->getCacheKey()]);
-        $this->assertContains('yopmail.com',  $domains);
+        $this->assertContains('yopmail.com', $domains);
     }
 
     /** @test */

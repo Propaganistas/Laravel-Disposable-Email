@@ -14,7 +14,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
     protected function getEnvironmentSetUp($app)
@@ -24,8 +24,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Setup the test environment.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
@@ -37,8 +35,6 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Clean up the testing environment before the next test.
-     *
-     * @return void
      */
     public function tearDown(): void
     {
@@ -51,7 +47,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Package Service Providers
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -62,7 +58,7 @@ abstract class TestCase extends BaseTestCase
     /**
      * Package Aliases
      *
-     * @param \Illuminate\Foundation\Application $app
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageAliases($app)

@@ -16,7 +16,7 @@ return [
     */
 
     'sources' => [
-        'https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json'
+        'https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json',
     ],
 
     /*
@@ -48,7 +48,6 @@ return [
     */
 
     'storage' => storage_path('framework/disposable_domains.json'),
-
 
     /*
     |--------------------------------------------------------------------------

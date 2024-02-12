@@ -45,10 +45,8 @@ class DisposableDomains
 
     /**
      * Disposable constructor.
-     *
-     * @param \Illuminate\Contracts\Cache\Repository|null $cache
      */
-    public function __construct(Cache $cache = null)
+    public function __construct(?Cache $cache = null)
     {
         $this->cache = $cache;
     }
@@ -86,6 +84,7 @@ class DisposableDomains
             // @TODO: Legacy code for bugfix. Remove me.
             if (is_string($domains) || empty($domains)) {
                 $this->flushCache();
+
                 return null;
             }
 
@@ -97,10 +96,8 @@ class DisposableDomains
 
     /**
      * Save the domains in cache.
-     *
-     * @param  array|null  $domains
      */
-    public function saveToCache(array $domains = null)
+    public function saveToCache(?array $domains = null)
     {
         if ($this->cache && ! empty($domains)) {
             $this->cache->forever($this->getCacheKey(), $domains);
@@ -136,8 +133,6 @@ class DisposableDomains
 
     /**
      * Save the domains in storage.
-     *
-     * @param  array  $domains
      */
     public function saveToStorage(array $domains)
     {
@@ -163,7 +158,7 @@ class DisposableDomains
     /**
      * Checks whether the given email address' domain matches a disposable email service.
      *
-     * @param string $email
+     * @param  string  $email
      * @return bool
      */
     public function isDisposable($email)
@@ -179,7 +174,7 @@ class DisposableDomains
     /**
      * Checks whether the given email address' domain doesn't match a disposable email service.
      *
-     * @param string $email
+     * @param  string  $email
      * @return bool
      */
     public function isNotDisposable($email)
@@ -190,7 +185,7 @@ class DisposableDomains
     /**
      * Alias of "isNotDisposable".
      *
-     * @param string $email
+     * @param  string  $email
      * @return bool
      */
     public function isIndisposable($email)
@@ -221,7 +216,6 @@ class DisposableDomains
     /**
      * Set the whitelist.
      *
-     * @param array $whitelist
      * @return $this
      */
     public function setWhitelist(array $whitelist)
@@ -244,7 +238,7 @@ class DisposableDomains
     /**
      * Set the storage path.
      *
-     * @param string $path
+     * @param  string  $path
      * @return $this
      */
     public function setStoragePath($path)
@@ -267,7 +261,7 @@ class DisposableDomains
     /**
      * Set the cache key.
      *
-     * @param string $key
+     * @param  string  $key
      * @return $this
      */
     public function setCacheKey($key)

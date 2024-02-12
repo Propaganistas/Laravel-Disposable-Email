@@ -2,8 +2,8 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Console;
 
-use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Config\Repository as Config;
 use Propaganistas\LaravelDisposableEmail\Contracts\Fetcher;
 use Propaganistas\LaravelDisposableEmail\DisposableDomains;
 
@@ -26,9 +26,7 @@ class UpdateDisposableDomainsCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param  \Illuminate\Contracts\Config\Repository  $config
-     * @param  \Propaganistas\LaravelDisposableEmail\DisposableDomains  $disposable
-     * @return  int
+     * @return int
      */
     public function handle(Config $config, DisposableDomains $disposable)
     {
@@ -39,18 +37,20 @@ class UpdateDisposableDomainsCommand extends Command
         );
 
         if (! $fetcher instanceof Fetcher) {
-            $this->error($fetcherClass . ' should implement ' . Fetcher::class);
+            $this->error($fetcherClass.' should implement '.Fetcher::class);
+
             return Command::FAILURE;
         }
 
         $sources = $config->get('disposable-email.sources');
 
-        if (!$sources && $config->get('disposable-email.source')) {
+        if (! $sources && $config->get('disposable-email.source')) {
             $sources = [$config->get('disposable-email.source')];
         }
 
         if (! is_array($sources)) {
             $this->error('Source URLs should be defined in an array');
+
             return Command::FAILURE;
         }
 
@@ -64,7 +64,8 @@ class UpdateDisposableDomainsCommand extends Command
         $this->line('Saving response to storage...');
 
         if (! $disposable->saveToStorage($data)) {
-            $this->error('Could not write to storage (' . $disposable->getStoragePath() . ')!');
+            $this->error('Could not write to storage ('.$disposable->getStoragePath().')!');
+
             return Command::FAILURE;
         }
 

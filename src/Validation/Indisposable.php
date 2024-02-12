@@ -16,10 +16,10 @@ class Indisposable
     /**
      * Validates whether an email address does not originate from a disposable email service.
      *
-     * @param string $attribute
-     * @param mixed $value
-     * @param array $parameters
-     * @param \Illuminate\Validation\Validator $validator
+     * @param  string  $attribute
+     * @param  mixed  $value
+     * @param  array  $parameters
+     * @param  \Illuminate\Validation\Validator  $validator
      * @return bool
      */
     public function validate($attribute, $value, $parameters, $validator)
