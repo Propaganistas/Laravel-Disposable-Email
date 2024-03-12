@@ -2,12 +2,13 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Tests\Validation;
 
+use PHPUnit\Framework\Attributes\Test;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
 
 class IndisposableTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_should_pass_for_indisposable_emails()
     {
         $validator = new Indisposable;
@@ -16,7 +17,7 @@ class IndisposableTest extends TestCase
         $this->assertTrue($validator->validate(null, $email, null, null));
     }
 
-    /** @test */
+    #[Test]
     public function it_should_fail_for_disposable_emails()
     {
         $validator = new Indisposable;
@@ -25,7 +26,7 @@ class IndisposableTest extends TestCase
         $this->assertFalse($validator->validate(null, $email, null, null));
     }
 
-    /** @test */
+    #[Test]
     public function it_is_usable_through_the_validator()
     {
         $passingValidation = $this->app['validator']->make(['email' => 'example@gmail.com'], ['email' => 'indisposable']);

@@ -3,12 +3,13 @@
 namespace Propaganistas\LaravelDisposableEmail\Tests\Console;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use Propaganistas\LaravelDisposableEmail\Contracts\Fetcher;
 use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 
 class UpdateDisposableDomainsCommandTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_creates_the_file()
     {
         $this->assertFileDoesNotExist($this->storagePath);
@@ -24,7 +25,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertContains('yopmail.com', $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_overwrites_the_file()
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
@@ -41,7 +42,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertNotContains('foo', $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_overwrite_on_fetch_failure()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -60,7 +61,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertEquals(['foo'], $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_use_a_custom_fetcher()
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
@@ -77,7 +78,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertEquals(['bar'], $domains);
     }
 
-    /** @test */
+    #[Test]
     public function custom_fetchers_need_fetcher_contract()
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
@@ -94,7 +95,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertNotEquals(['foo'], $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_processes_legacy_source_config()
     {
         file_put_contents($this->storagePath, json_encode(['foo']));

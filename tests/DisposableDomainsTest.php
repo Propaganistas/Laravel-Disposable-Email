@@ -2,23 +2,24 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Propaganistas\LaravelDisposableEmail\DisposableDomains;
 
 class DisposableDomainsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_can_be_resolved_using_alias()
     {
         $this->assertEquals(DisposableDomains::class, get_class($this->app->make('disposable_email.domains')));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_be_resolved_using_class()
     {
         $this->assertEquals(DisposableDomains::class, get_class($this->app->make(DisposableDomains::class)));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_storage_path()
     {
         $this->assertEquals(
@@ -27,7 +28,7 @@ class DisposableDomainsTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_set_storage_path()
     {
         $this->disposable()->setStoragePath('foo');
@@ -35,7 +36,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertEquals('foo', $this->disposable()->getStoragePath());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_cache_key()
     {
         $this->assertEquals(
@@ -44,7 +45,7 @@ class DisposableDomainsTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_set_cache_key()
     {
         $this->disposable()->setCacheKey('foo');
@@ -52,7 +53,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertEquals('foo', $this->disposable()->getCacheKey());
     }
 
-    /** @test */
+    #[Test]
     public function it_takes_cached_domains_if_available()
     {
         $this->app['cache.store'][$this->disposable()->getCacheKey()] = ['foo'];
@@ -64,7 +65,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertEquals(['foo'], $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_flushes_invalid_cache_values()
     {
         $this->app['cache.store'][$this->disposable()->getCacheKey()] = 'foo';
@@ -74,7 +75,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertNotEquals('foo', $this->app['cache.store'][$this->disposable()->getCacheKey()]);
     }
 
-    /** @test */
+    #[Test]
     public function it_skips_cache_when_configured()
     {
         $this->app['config']['disposable-email.cache.enabled'] = false;
@@ -86,7 +87,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertContains('yopmail.com', $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_takes_storage_domains_when_cache_is_not_available()
     {
         $this->app['config']['disposable-email.cache.enabled'] = false;
@@ -100,7 +101,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertEquals(['foo'], $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_takes_package_domains_when_storage_is_not_available()
     {
         $this->app['config']['disposable-email.cache.enabled'] = false;
@@ -111,7 +112,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertContains('yopmail.com', $domains);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_flush_storage()
     {
         file_put_contents($this->storagePath, 'foo');
@@ -121,7 +122,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertFileDoesNotExist($this->storagePath);
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_throw_exceptions_for_flush_storage_when_file_doesnt_exist()
     {
         $this->disposable()->flushStorage();
@@ -129,7 +130,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_flush_cache()
     {
         $this->app['cache.store'][$this->disposable()->getCacheKey()] = 'foo';
@@ -141,7 +142,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertNull($this->app['cache']->get($this->disposable()->getCacheKey()));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_verify_disposability()
     {
         $this->assertTrue($this->disposable()->isDisposable('example@yopmail.com'));
@@ -153,7 +154,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertTrue($this->disposable()->isIndisposable('example@gmail.com'));
     }
 
-    /** @test */
+    #[Test]
     public function it_checks_the_full_email_domain()
     {
         $this->assertTrue($this->disposable()->isDisposable('example@mailinator.com'));
@@ -161,7 +162,7 @@ class DisposableDomainsTest extends TestCase
         $this->assertTrue($this->disposable()->isNotDisposable('example@isnotdisposable.mailinator.com'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_exclude_whitelisted_domains()
     {
         $this->disposable()->setWhitelist(['yopmail.com']);
