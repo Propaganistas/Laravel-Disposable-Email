@@ -44,15 +44,22 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
 	'indisposable' => 'Disposable email addresses are not allowed.',
 	```
 
-6. (optional) It's highly advised to update the disposable domains list regularly. You can either run the command yourself now and then or, if you make use of Laravel's scheduler, include it over there (`App\Console\Kernel`):
-    
+6. (optional) It's highly advised to update the disposable domains list regularly. You can either run the command yourself now and then or, if you make use of Laravel's scheduler, you can register the `disposable:update` command: 
+
+   In `routes/console.php`:
     ```php
-    protected function schedule(Schedule $schedule)
-	{
-        $schedule->command('disposable:update')->weekly();
-	}
+    use Illuminate\Support\Facades\Schedule;
+    
+    Schedule::command('disposable:update')->weekly();
     ```
 
+    Or if you Laravel 10 or below, head over to the Console kernel:
+   ```php
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('disposable:update')->weekly();
+    }
+    ```
 ### Usage
 
 Use the `indisposable` validator to ensure a given field doesn't hold a disposable email address. You'll probably want to add it after the `email` validator to make sure a valid email is passed through:
