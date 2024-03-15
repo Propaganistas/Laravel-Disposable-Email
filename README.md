@@ -53,7 +53,7 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
     Schedule::command('disposable:update')->weekly();
     ```
 
-    Or if you Laravel 10 or below, head over to the Console kernel:
+    Or if you use Laravel 10 or below, head over to the Console kernel:
    ```php
     protected function schedule(Schedule $schedule)
     {
