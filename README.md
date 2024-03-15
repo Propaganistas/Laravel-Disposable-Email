@@ -44,13 +44,19 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
 	'indisposable' => 'Disposable email addresses are not allowed.',
 	```
 
-6. (optional) It's highly advised to update the disposable domains list regularly. You can either run the command yourself now and then or, if you make use of Laravel's scheduler, include it over there (`App\Console\Kernel`):
-    
+6. (optional) It's highly advised to update the disposable domains list regularly. You can either run the command yourself now and then or, if you make use of Laravel's scheduler, include it over there (`App\Console\Kernel`): 
     ```php
     protected function schedule(Schedule $schedule)
 	{
         $schedule->command('disposable:update')->weekly();
 	}
+    ```
+    
+    In Laravel 11 include it over there (`routes/console.php`):
+    ```php
+    use Illuminate\Support\Facades\Schedule;
+    
+    Schedule::command('disposable:update')->weekly();
     ```
 
 ### Usage
