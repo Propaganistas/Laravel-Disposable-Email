@@ -10,41 +10,31 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
 
 ### Installation
 
-1. Run the Composer require command to install the package:
+1. Run the Composer require command to install the package. The service provider is discovered automatically.
 
     ```bash
     composer require propaganistas/laravel-disposable-email
     ```
 
-2. If you don't use auto-discovery, open up your app config and add the Service Provider to the `$providers` array:
+2. Publish the configuration file and adapt the configuration as desired:
 
-     ```php
-    'providers' => [
-        ...
-     
-        Propaganistas\LaravelDisposableEmail\DisposableEmailServiceProvider::class,
-    ],
-    ```
-
-3. Publish the configuration file and adapt the configuration as desired:
-
-	```bash
+    ```bash
     php artisan vendor:publish --tag=laravel-disposable-email
     ```
 
-4. Run the following artisan command to fetch an up-to-date list of disposable domains:
+3. Run the following artisan command to fetch an up-to-date list of disposable domains:
     
     ```bash
     php artisan disposable:update
     ```
 
-5. (optional) In your languages directory, add for each language an extra language line for the validator:
+4. (optional) In your languages directory, add for each language an extra language line for the validator:
 
-	```php
-	'indisposable' => 'Disposable email addresses are not allowed.',
-	```
+    ```php
+    'indisposable' => 'Disposable email addresses are not allowed.',
+    ```
 
-6. (optional) It's highly advised to update the disposable domains list regularly. You can either run the command yourself now and then or, if you make use of Laravel's scheduler, you can register the `disposable:update` command: 
+5. (optional) It's highly advised to update the disposable domains list regularly. You can either run the command yourself now and then or, if you make use of Laravel's scheduler, you can register the `disposable:update` command: 
 
    In `routes/console.php`:
     ```php
