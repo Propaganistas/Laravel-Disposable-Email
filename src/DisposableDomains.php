@@ -177,13 +177,17 @@ class DisposableDomains
             return false;
         }
 
-        if (! $this->getIncludeSubdomains()) {
-            return in_array($domain, $this->domains);
+        if (in_array($domain, $this->domains)) {
+            // Domain is a matching root domain.
+            return true;
         }
 
-        foreach ($this->domains as $root) {
-            if (str_ends_with($domain, '.'.$root)) {
-                return true;
+        if ($this->getIncludeSubdomains()) {
+            // Check for subdomains.
+            foreach ($this->domains as $root) {
+                if (str_ends_with($domain, '.'.$root)) {
+                    return true;
+                }
             }
         }
 

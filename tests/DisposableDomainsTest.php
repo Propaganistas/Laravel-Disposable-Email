@@ -193,6 +193,20 @@ class DisposableDomainsTest extends TestCase
         $this->disposable()->setIncludeSubdomains(true);
 
         $this->assertTrue($this->disposable()->isDisposable('example@subdomain.mailinator.com'));
+
+        // Not a subdomain OR root domain!
+        $this->assertFalse($this->disposable()->isDisposable('example@subdomainmailinator.com'));
+    }
+
+    #[Test]
+    public function it_still_checks_root_domains_when_subdomain_checking_is_configured()
+    {
+        $this->disposable()->setIncludeSubdomains(true);
+
+        $this->assertTrue($this->disposable()->isDisposable('example@mailinator.com'));
+
+        // Not a subdomain OR root domain!
+        $this->assertFalse($this->disposable()->isDisposable('example@subdomainmailinator.com'));
     }
 
     #[Test]
