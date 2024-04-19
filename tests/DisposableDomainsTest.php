@@ -180,11 +180,19 @@ class DisposableDomainsTest extends TestCase
     }
 
     #[Test]
-    public function it_can_check_subdomains()
+    public function it_doesnt_check_subdomains_when_not_configured()
+    {
+        $this->disposable()->setIncludeSubdomains(false);
+
+        $this->assertFalse($this->disposable()->isDisposable('example@subdomain.mailinator.com'));
+    }
+
+    #[Test]
+    public function it_checks_subdomains_when_configured()
     {
         $this->disposable()->setIncludeSubdomains(true);
 
-        $this->assertTrue($this->disposable()->isDisposable('example@isnotdisposable.mailinator.com'));
+        $this->assertTrue($this->disposable()->isDisposable('example@subdomain.mailinator.com'));
     }
 
     #[Test]
@@ -198,5 +206,8 @@ class DisposableDomainsTest extends TestCase
         $this->assertIsArray($domains);
         $this->assertNotContains('yopmail.com', $domains);
         $this->assertTrue($this->disposable()->isNotDisposable('example@yopmail.com'));
+
+        $this->disposable()->setIncludeSubdomains(true);
+        $this->assertTrue($this->disposable()->isNotDisposable('example@subdomain.yopmail.com'));
     }
 }

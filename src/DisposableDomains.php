@@ -170,17 +170,23 @@ class DisposableDomains
      */
     public function isDisposable($email)
     {
-        if ($domain = Str::lower(Arr::get(explode('@', $email, 2), 1))) {
-            if($this->includeSubdomains) {
-                $domain_parts = explode('.', $domain);
-                if(count($domain_parts) > 2) {
-                    $domain = $domain_parts[count($domain_parts) - 2] . '.' . $domain_parts[count($domain_parts) - 1];
-                }
-            }
+        $domain = Str::lower(Arr::get(explode('@', $email, 2), 1));
+
+        if (! $domain) {
+            // Just ignore this validator if the value doesn't even resemble an email or domain.
+            return false;
+        }
+
+        if (! $this->getIncludeSubdomains()) {
             return in_array($domain, $this->domains);
         }
 
-        // Just ignore this validator if the value doesn't even resemble an email or domain.
+        foreach ($this->domains as $root) {
+            if (str_ends_with($domain, '.'.$root)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
