@@ -37,6 +37,23 @@ class DisposableDomainsTest extends TestCase
     }
 
     #[Test]
+    public function it_can_get_include_subdomains()
+    {
+        $this->assertEquals(
+            $this->app['config']['disposable-email.include_subdomains'],
+            $this->disposable()->getIncludeSubdomains()
+        );
+    }
+
+    #[Test]
+    public function it_can_set_include_subdomains()
+    {
+        $this->disposable()->setIncludeSubdomains(true);
+
+        $this->assertEquals(true, $this->disposable()->getIncludeSubdomains());
+    }
+
+    #[Test]
     public function it_can_get_cache_key()
     {
         $this->assertEquals(
@@ -160,6 +177,14 @@ class DisposableDomainsTest extends TestCase
         $this->assertTrue($this->disposable()->isDisposable('example@mailinator.com'));
         $this->assertTrue($this->disposable()->isDisposable('example@mail.mailinator.com'));
         $this->assertTrue($this->disposable()->isNotDisposable('example@isnotdisposable.mailinator.com'));
+    }
+
+    #[Test]
+    public function it_can_check_subdomains()
+    {
+        $this->disposable()->setIncludeSubdomains(true);
+
+        $this->assertTrue($this->disposable()->isDisposable('example@isnotdisposable.mailinator.com'));
     }
 
     #[Test]

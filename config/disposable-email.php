@@ -65,6 +65,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Include Subdomains
+    |--------------------------------------------------------------------------
+    |
+    | Determines whether subdomains should be validated based on the disposability
+    | status of their parent domains. Enabling this will treat any subdomain of
+    | a disposable domain as disposable too (e.g., 'temp.abc.com' if 'abc.com' is
+    | disposable).
+    |
+    */
+    'include_subdomains' => false,
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache Configuration
     |--------------------------------------------------------------------------
     |

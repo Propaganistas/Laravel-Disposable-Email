@@ -54,6 +54,7 @@ class DisposableEmailServiceProvider extends ServiceProvider
 
             $instance = new DisposableDomains($cache ?? null);
 
+            $instance->setIncludeSubdomains($app['config']['disposable-email.include_subdomains']);
             $instance->setStoragePath($app['config']['disposable-email.storage']);
             $instance->setCacheKey($app['config']['disposable-email.cache.key']);
             $instance->setWhitelist($app['config']['disposable-email.whitelist']);

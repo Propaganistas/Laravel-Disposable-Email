@@ -44,6 +44,13 @@ class DisposableDomains
     protected $cacheKey;
 
     /**
+     * Whether to include subdomains.
+     *
+     * @var bool
+     */
+    protected $includeSubdomains = false;
+
+    /**
      * Disposable constructor.
      */
     public function __construct(?Cache $cache = null)
@@ -164,6 +171,12 @@ class DisposableDomains
     public function isDisposable($email)
     {
         if ($domain = Str::lower(Arr::get(explode('@', $email, 2), 1))) {
+            if($this->includeSubdomains) {
+                $domain_parts = explode('.', $domain);
+                if(count($domain_parts) > 2) {
+                    $domain = $domain_parts[count($domain_parts) - 2] . '.' . $domain_parts[count($domain_parts) - 1];
+                }
+            }
             return in_array($domain, $this->domains);
         }
 
@@ -221,6 +234,28 @@ class DisposableDomains
     public function setWhitelist(array $whitelist)
     {
         $this->whitelist = $whitelist;
+
+        return $this;
+    }
+
+    /**
+     * Get whether to include subdomains.
+     *
+     * @return bool
+     */
+    public function getIncludeSubdomains()
+    {
+        return $this->includeSubdomains;
+    }
+
+    /**
+     * Set whether to include subdomains.
+     *
+     * @return $this
+     */
+    public function setIncludeSubdomains(bool $includeSubdomains)
+    {
+        $this->includeSubdomains = $includeSubdomains;
 
         return $this;
     }
