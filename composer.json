@@ -31,7 +31,6 @@
         "mockery/mockery": "^1.4.2",
         "orchestra/testbench": "*",
         "phpunit/phpunit": "^10.5",
-        "larastan/larastan": "^2.9",
         "laravel/pint": "^1.14"
     },
     "autoload": {
