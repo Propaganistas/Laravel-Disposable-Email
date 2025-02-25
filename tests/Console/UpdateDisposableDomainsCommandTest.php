@@ -10,7 +10,7 @@ use Propaganistas\LaravelDisposableEmail\Tests\TestCase;
 class UpdateDisposableDomainsCommandTest extends TestCase
 {
     #[Test]
-    public function it_creates_the_file()
+    public function it_loads_source_into_storage()
     {
         $this->assertFileDoesNotExist($this->storagePath);
 
@@ -26,7 +26,7 @@ class UpdateDisposableDomainsCommandTest extends TestCase
     }
 
     #[Test]
-    public function it_overwrites_the_file()
+    public function it_overwrites_source_in_storage()
     {
         file_put_contents($this->storagePath, json_encode(['foo']));
 
@@ -40,6 +40,28 @@ class UpdateDisposableDomainsCommandTest extends TestCase
         $this->assertIsArray($domains);
         $this->assertContains('yopmail.com', $domains);
         $this->assertNotContains('foo', $domains);
+    }
+
+    #[Test]
+    public function it_loads_multiple_sources()
+    {
+        $this->assertFileDoesNotExist($this->storagePath);
+
+        $this->app['config']['disposable-email.sources'] = [
+            'https://cdn.jsdelivr.net/gh/disposable/disposable-email-domains@master/domains.json',
+            __DIR__.'/../local_source.json',
+        ];
+
+        $this->artisan('disposable:update')
+            ->assertExitCode(0);
+
+        $this->assertFileExists($this->storagePath);
+
+        $domains = $this->disposable()->getDomains();
+
+        $this->assertIsArray($domains);
+        $this->assertContains('yopmail.com', $domains);
+        $this->assertContains('local_test_source.org', $domains);
     }
 
     #[Test]
