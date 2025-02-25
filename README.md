@@ -1,6 +1,6 @@
 # Laravel Disposable Email
 
-![Tests](https://github.com/Propaganistas/Laravel-Disposable-Email/workflows/Tests/badge.svg?branch=master)
+[![Tests](https://github.com/Propaganistas/Laravel-Disposable-Email/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/Propaganistas/Laravel-Disposable-Email/actions/workflows/tests.yml)
 [![Latest Stable Version](https://poser.pugx.org/propaganistas/laravel-disposable-email/v/stable)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
 [![Total Downloads](https://poser.pugx.org/propaganistas/laravel-disposable-email/downloads)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
 [![License](https://poser.pugx.org/propaganistas/laravel-disposable-email/license)](https://packagist.org/packages/propaganistas/laravel-disposable-email)
