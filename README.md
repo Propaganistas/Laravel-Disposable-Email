@@ -22,33 +22,20 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
     php artisan vendor:publish --tag=laravel-disposable-email
     ```
 
-3. Run the following artisan command to fetch an up-to-date list of disposable domains:
-    
-    ```bash
-    php artisan disposable:update
-    ```
-
-4. (optional) In your languages directory, add for each language an extra language line for the validator:
+3. (optional) In your languages directory, add for each language an extra language line for the validator:
 
     ```php
     'indisposable' => 'Disposable email addresses are not allowed.',
     ```
 
-5. (optional) It's highly advised to update the disposable domains list regularly. You can either run the command yourself now and then or, if you make use of Laravel's scheduler, you can register the `disposable:update` command: 
+4. (optional) This package receives a **weekly** patch release containing updates to the built-in disposable domains list. If you are not able to bump your installed version accordingly, or just want to stay ahead of things, make sure to update the domains list yourself at any interval you like by running or scheduling the `disposable:update` command: 
 
-   In `routes/console.php`:
     ```php
+    // routes/console.php
+    
     use Illuminate\Support\Facades\Schedule;
     
-    Schedule::command('disposable:update')->weekly();
-    ```
-
-    Or if you use Laravel 10 or below, head over to the Console kernel:
-   ```php
-    protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('disposable:update')->weekly();
-    }
+    Schedule::command('disposable:update')->daily();
     ```
 ### Usage
 
