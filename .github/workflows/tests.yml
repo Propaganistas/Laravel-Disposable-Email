@@ -25,7 +25,7 @@ jobs:
             stability: prefer-stable
         exclude:
           - laravel: 13
-          - php: 8.2
+            php: 8.2
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} (${{ matrix.stability }})
 
