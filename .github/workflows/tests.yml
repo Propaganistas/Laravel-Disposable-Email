@@ -31,14 +31,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, json, libxml, mbstring, zip
-          tools: composer:v2
           coverage: none
 
       # https://github.com/briannesbitt/Carbon/releases/tag/2.62.1
