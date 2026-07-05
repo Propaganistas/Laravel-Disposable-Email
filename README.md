@@ -45,6 +45,22 @@ Use the `indisposable` validator to ensure a given field doesn't hold a disposab
 'field' => 'email|indisposable',
 ```
 
+### MX record inspection
+
+Disposable services rotate their public "front" domains endlessly (e.g. `web-library.net`) while their backend mail infrastructure stays constant (e.g. `mail.tm`). Because a freshly rotated front domain won't be on the list yet, it can slip through a plain domain-list check.
+
+Enabling MX inspection closes that gap: the validator resolves the domain's MX records and flags the address when its mail servers point at a domain that's already on the list. Matching happens at a DNS label boundary, so an MX target of `mail.mailinator.com` matches the listed `mailinator.com`.
+
+Enable it in `config/disposable-email.php`:
+
+```php
+'mx' => [
+    'enabled' => true,
+],
+```
+
+> **Note:** this performs a live DNS lookup during validation, trading a little latency for broader coverage. Leave it disabled if your validation path must stay strictly offline. It applies to the `indisposable` rule and every `DisposableDomains` check automatically.
+
 ### Custom fetches
 
 By default the package retrieves a new list by using `file_get_contents()`. 

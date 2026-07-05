@@ -32,7 +32,7 @@ class DisposableDomains
     /**
      * The cache repository.
      *
-     * @var \Illuminate\Contracts\Cache\Repository|null
+     * @var Repository|null
      */
     protected $cache;
 
@@ -51,11 +51,38 @@ class DisposableDomains
     protected $includeSubdomains = false;
 
     /**
+     * Whether to inspect the domain's MX records.
+     *
+     * @var bool
+     */
+    protected $checkMx = false;
+
+    /**
+     * Resolver used to fetch a domain's MX records. Overridable for testing.
+     *
+     * @var \Closure
+     */
+    protected $mxResolver;
+
+    /**
+     * In-memory memoization of resolved MX targets, keyed by domain.
+     *
+     * @var array
+     */
+    protected $mxCache = [];
+
+    /**
      * Disposable constructor.
      */
     public function __construct(?Cache $cache = null)
     {
         $this->cache = $cache;
+
+        $this->mxResolver = static function ($domain) {
+            $records = @dns_get_record($domain, DNS_MX);
+
+            return $records === false ? [] : $records;
+        };
     }
 
     /**
@@ -191,7 +218,64 @@ class DisposableDomains
             }
         }
 
+        if ($this->getCheckMx() && $this->hasDisposableMx($domain)) {
+            // The domain's mail servers point at a known disposable service.
+            // This catches freshly rotated "front" domains that aren't listed
+            // yet but share their backend mail infrastructure with a listed one.
+            return true;
+        }
+
         return false;
+    }
+
+    /**
+     * Checks whether any of the domain's MX targets belong to a disposable service.
+     *
+     * MX targets are always matched at a DNS label boundary against the domain
+     * list (e.g. "mail.mailinator.com" matches the listed "mailinator.com"),
+     * regardless of the "include subdomains" setting.
+     *
+     * @param  string  $domain
+     */
+    protected function hasDisposableMx($domain): bool
+    {
+        foreach ($this->mxTargets($domain) as $host) {
+            if (in_array($host, $this->domains)) {
+                return true;
+            }
+
+            foreach ($this->domains as $root) {
+                if (str_ends_with($host, '.'.$root)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Resolve the lower-cased MX target hosts for the given domain.
+     *
+     * @param  string  $domain
+     */
+    protected function mxTargets($domain): array
+    {
+        if (array_key_exists($domain, $this->mxCache)) {
+            return $this->mxCache[$domain];
+        }
+
+        $targets = [];
+
+        foreach (call_user_func($this->mxResolver, $domain) as $record) {
+            if (($record['type'] ?? null) !== 'MX' || empty($record['target'])) {
+                continue;
+            }
+
+            $targets[] = Str::lower(rtrim((string) $record['target'], '.'));
+        }
+
+        return $this->mxCache[$domain] = array_values(array_unique($targets));
     }
 
     /**
@@ -266,6 +350,43 @@ class DisposableDomains
     public function setIncludeSubdomains(bool $includeSubdomains)
     {
         $this->includeSubdomains = $includeSubdomains;
+
+        return $this;
+    }
+
+    /**
+     * Get whether to inspect the domain's MX records.
+     */
+    public function getCheckMx(): bool
+    {
+        return $this->checkMx;
+    }
+
+    /**
+     * Set whether to inspect the domain's MX records.
+     *
+     * @return $this
+     */
+    public function setCheckMx(bool $checkMx)
+    {
+        $this->checkMx = $checkMx;
+
+        return $this;
+    }
+
+    /**
+     * Override the MX resolver (primarily for testing).
+     *
+     * The resolver receives a domain and returns an array of DNS records in
+     * the shape produced by dns_get_record(), i.e. entries with 'type' and
+     * 'target' keys.
+     *
+     * @return $this
+     */
+    public function setMxResolver(\Closure $resolver)
+    {
+        $this->mxResolver = $resolver;
+        $this->mxCache = [];
 
         return $this;
     }

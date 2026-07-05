@@ -1,5 +1,7 @@
 <?php
 
+use Propaganistas\LaravelDisposableEmail\Fetcher\DefaultFetcher;
+
 return [
 
     /*
@@ -34,7 +36,7 @@ return [
     |
     */
 
-    'fetcher' => \Propaganistas\LaravelDisposableEmail\Fetcher\DefaultFetcher::class,
+    'fetcher' => DefaultFetcher::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -76,6 +78,27 @@ return [
     */
 
     'include_subdomains' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | MX Record Inspection
+    |--------------------------------------------------------------------------
+    |
+    | Disposable services rotate their public "front" domains endlessly while
+    | their backend mail infrastructure stays constant. When enabled, the
+    | validator resolves the domain's MX records and flags the address when
+    | those mail servers point at a domain that's already on the list -
+    | catching freshly rotated front domains that aren't listed yet.
+    |
+    | Note: enabling this performs a live DNS lookup during validation, so it
+    | trades a little latency for broader coverage. Keep it disabled if your
+    | validation path must stay strictly offline.
+    |
+    */
+
+    'mx' => [
+        'enabled' => false,
+    ],
 
     /*
     |--------------------------------------------------------------------------
