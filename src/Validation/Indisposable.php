@@ -24,6 +24,9 @@ class Indisposable
      */
     public function validate($attribute, $value, $parameters, $validator)
     {
-        return DisposableDomains::isNotDisposable($value);
+        return DisposableDomains::isNotDisposable(
+            $value,
+            checkMx: in_array('mx', $parameters ?? [], true)
+        );
     }
 }
