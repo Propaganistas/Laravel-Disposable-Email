@@ -42,7 +42,7 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
 Use the `indisposable` validator to ensure a given field doesn't hold a disposable email address. You'll probably want to add it after the `email` validator to make sure a valid email is passed through:
 
 ```php
-'field' => 'email|indisposable',
+'field' => ['email','indisposable'],
 ```
 
 ### MX record inspection
@@ -54,7 +54,7 @@ Enabling MX inspection closes that gap: the validator resolves the domain's MX r
 Simply opt in by specifying the `mx` parameter:
 
 ```php
-'field' => 'email|indisposable:mx',
+'field' => ['email','indisposable:mx'],
 ```
 
 > **Note:** this performs a live DNS lookup during validation, trading a little latency for broader coverage. Leave off the `mx` parameter if your validation path must stay strictly offline.
