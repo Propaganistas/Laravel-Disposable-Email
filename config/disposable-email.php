@@ -1,7 +1,5 @@
 <?php
 
-use Propaganistas\LaravelDisposableEmail\Fetcher\DefaultFetcher;
-
 return [
 
     /*
@@ -36,7 +34,7 @@ return [
     |
     */
 
-    'fetcher' => DefaultFetcher::class,
+    'fetcher' => \Propaganistas\LaravelDisposableEmail\Fetcher\DefaultFetcher::class,
 
     /*
     |--------------------------------------------------------------------------

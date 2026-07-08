@@ -2,7 +2,6 @@
 
 namespace Propaganistas\LaravelDisposableEmail;
 
-use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -32,7 +31,7 @@ class DisposableDomains
     /**
      * The cache repository.
      *
-     * @var Cache|null
+     * @var \Illuminate\Contracts\Cache\Repository|null
      */
     protected $cache;
 
