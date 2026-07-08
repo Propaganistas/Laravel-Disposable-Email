@@ -2,7 +2,6 @@
 
 namespace Propaganistas\LaravelDisposableEmail;
 
-use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -51,11 +50,31 @@ class DisposableDomains
     protected $includeSubdomains = false;
 
     /**
+     * Resolver used to fetch a domain's MX records. Overridable for testing.
+     *
+     * @var \Closure
+     */
+    protected $mxResolver;
+
+    /**
+     * In-memory memoization of resolved MX targets, keyed by domain.
+     *
+     * @var array
+     */
+    protected $mxCache = [];
+
+    /**
      * Disposable constructor.
      */
     public function __construct(?Cache $cache = null)
     {
         $this->cache = $cache;
+
+        $this->mxResolver = static function ($domain) {
+            $records = @dns_get_record($domain, DNS_MX);
+
+            return $records === false ? [] : $records;
+        };
     }
 
     /**
@@ -166,9 +185,10 @@ class DisposableDomains
      * Checks whether the given email address' domain matches a disposable email service.
      *
      * @param  string  $email
+     * @param  bool  $checkMx
      * @return bool
      */
-    public function isDisposable($email)
+    public function isDisposable($email, bool $checkMx = false)
     {
         $domain = Str::lower(Arr::get(explode('@', $email, 2), 1));
 
@@ -177,16 +197,16 @@ class DisposableDomains
             return false;
         }
 
-        if (in_array($domain, $this->domains)) {
-            // Domain is a matching root domain.
-            return true;
-        }
+        foreach ($this->candidateDomains($domain, $checkMx) as $candidate) {
+            if (in_array($candidate, $this->domains)) {
+                return true;
+            }
 
-        if ($this->getIncludeSubdomains()) {
-            // Check for subdomains.
-            foreach ($this->domains as $root) {
-                if (str_ends_with($domain, '.'.$root)) {
-                    return true;
+            if ($this->getIncludeSubdomains() || $candidate !== $domain) {
+                foreach ($this->domains as $root) {
+                    if (str_ends_with($candidate, '.'.$root)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -195,25 +215,75 @@ class DisposableDomains
     }
 
     /**
+     * Build the list of domains to inspect for disposability.
+     *
+     * The email domain is always checked. When MX inspection is enabled, its
+     * resolved MX target hosts are appended and matched in the same pass.
+     *
+     * @param  string  $domain
+     * @return array<int, string>
+     */
+    protected function candidateDomains($domain, bool $includeMx): array
+    {
+        $candidates = [$domain];
+
+        if ($includeMx) {
+            $candidates = array_merge($candidates, $this->mxTargets($domain));
+        }
+
+        return array_values(array_unique($candidates));
+    }
+
+    /**
+     * Resolve the lower-cased MX target hosts for the given domain.
+     *
+     * MX targets are always matched at a DNS label boundary against the domain
+     * list (e.g. "mail.mailinator.com" matches the listed "mailinator.com"),
+     * regardless of the "include subdomains" setting.
+     *
+     * @param  string  $domain
+     */
+    protected function mxTargets($domain): array
+    {
+        if (array_key_exists($domain, $this->mxCache)) {
+            return $this->mxCache[$domain];
+        }
+
+        $targets = [];
+
+        foreach (call_user_func($this->mxResolver, $domain) as $record) {
+            if (($record['type'] ?? null) !== 'MX' || empty($record['target'])) {
+                continue;
+            }
+
+            $targets[] = Str::lower(rtrim((string) $record['target'], '.'));
+        }
+
+        return $this->mxCache[$domain] = array_values(array_unique($targets));
+    }
+
+    /**
      * Checks whether the given email address' domain doesn't match a disposable email service.
      *
      * @param  string  $email
+     * @param  bool  $checkMx
      * @return bool
      */
-    public function isNotDisposable($email)
+    public function isNotDisposable($email, bool $checkMx = false)
     {
-        return ! $this->isDisposable($email);
+        return ! $this->isDisposable($email, $checkMx);
     }
 
     /**
      * Alias of "isNotDisposable".
      *
      * @param  string  $email
+     * @param  bool  $checkMx
      * @return bool
      */
-    public function isIndisposable($email)
+    public function isIndisposable($email, bool $checkMx = false)
     {
-        return $this->isNotDisposable($email);
+        return $this->isNotDisposable($email, $checkMx);
     }
 
     /**
@@ -266,6 +336,23 @@ class DisposableDomains
     public function setIncludeSubdomains(bool $includeSubdomains)
     {
         $this->includeSubdomains = $includeSubdomains;
+
+        return $this;
+    }
+
+    /**
+     * Override the MX resolver (primarily for testing).
+     *
+     * The resolver receives a domain and returns an array of DNS records in
+     * the shape produced by dns_get_record(), i.e. entries with 'type' and
+     * 'target' keys.
+     *
+     * @return $this
+     */
+    public function setMxResolver(\Closure $resolver)
+    {
+        $this->mxResolver = $resolver;
+        $this->mxCache = [];
 
         return $this;
     }
