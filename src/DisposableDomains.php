@@ -2,6 +2,8 @@
 
 namespace Propaganistas\LaravelDisposableEmail;
 
+use Closure;
+use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -31,7 +33,7 @@ class DisposableDomains
     /**
      * The cache repository.
      *
-     * @var \Illuminate\Contracts\Cache\Repository|null
+     * @var Cache|null
      */
     protected $cache;
 
@@ -50,9 +52,9 @@ class DisposableDomains
     protected $includeSubdomains = false;
 
     /**
-     * Resolver used to fetch a domain's MX records. Overridable for testing.
+     * Custom resolver used to fetch a domain's MX records. Overridable for testing.
      *
-     * @var \Closure
+     * @var Closure
      */
     protected $mxResolver;
 
@@ -69,12 +71,6 @@ class DisposableDomains
     public function __construct(?Cache $cache = null)
     {
         $this->cache = $cache;
-
-        $this->mxResolver = static function ($domain) {
-            $records = @dns_get_record($domain, DNS_MX);
-
-            return $records === false ? [] : $records;
-        };
     }
 
     /**
@@ -249,9 +245,14 @@ class DisposableDomains
             return $this->mxCache[$domain];
         }
 
+        $resolver = $this->mxResolver ?? function ($domain) {
+            $records = dns_get_record($domain, DNS_MX);
+            return $records === false ? [] : $records;
+        };
+
         $targets = [];
 
-        foreach (call_user_func($this->mxResolver, $domain) as $record) {
+        foreach ($resolver($domain) as $record) {
             if (($record['type'] ?? null) !== 'MX' || empty($record['target'])) {
                 continue;
             }
@@ -341,7 +342,7 @@ class DisposableDomains
     }
 
     /**
-     * Override the MX resolver (primarily for testing).
+     * Override the MX resolver.
      *
      * The resolver receives a domain and returns an array of DNS records in
      * the shape produced by dns_get_record(), i.e. entries with 'type' and
@@ -349,7 +350,7 @@ class DisposableDomains
      *
      * @return $this
      */
-    public function setMxResolver(\Closure $resolver)
+    public function setMxResolver(Closure $resolver)
     {
         $this->mxResolver = $resolver;
         $this->mxCache = [];
