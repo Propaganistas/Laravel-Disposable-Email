@@ -72,4 +72,14 @@ class IndisposableTest extends TestCase
         $this->assertTrue($validator->validate(null, $email, [], null));
         $this->assertFalse($validator->validate(null, $email, ['mx'], null));
     }
+
+    #[Test]
+    public function it_handles_non_string_and_invalid_email_values_gracefully()
+    {
+        $arrayValidation = $this->app['validator']->make(['email' => ['invalid']], ['email' => 'indisposable']);
+        $this->assertTrue($arrayValidation->passes());
+
+        $nonEmailValidation = $this->app['validator']->make(['email' => 'not-an-email'], ['email' => 'indisposable']);
+        $this->assertTrue($nonEmailValidation->passes());
+    }
 }
