@@ -186,12 +186,18 @@ class DisposableDomains
      */
     public function isDisposable($email, bool $checkMx = false)
     {
-        $domain = Str::lower(Arr::get(explode('@', $email, 2), 1));
+        if (! is_string($email)) {
+            return false;
+        }
+
+        $domain = Arr::get(explode('@', $email, 2), 1);
 
         if (! $domain) {
             // Just ignore this validator if the value doesn't even resemble an email or domain.
             return false;
         }
+
+        $domain = Str::lower($domain);
 
         foreach ($this->candidateDomains($domain, $checkMx) as $candidate) {
             if (in_array($candidate, $this->domains)) {
