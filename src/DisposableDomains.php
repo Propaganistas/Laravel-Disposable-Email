@@ -184,12 +184,8 @@ class DisposableDomains
      * @param  bool  $checkMx
      * @return bool
      */
-    public function isDisposable($email, bool $checkMx = false)
+    public function isDisposable(string $email, bool $checkMx = false)
     {
-        if (! is_string($email)) {
-            return false;
-        }
-
         $domain = Arr::get(explode('@', $email, 2), 1);
 
         if (! $domain) {
@@ -276,7 +272,7 @@ class DisposableDomains
      * @param  bool  $checkMx
      * @return bool
      */
-    public function isNotDisposable($email, bool $checkMx = false)
+    public function isNotDisposable(string $email, bool $checkMx = false)
     {
         return ! $this->isDisposable($email, $checkMx);
     }
@@ -288,7 +284,7 @@ class DisposableDomains
      * @param  bool  $checkMx
      * @return bool
      */
-    public function isIndisposable($email, bool $checkMx = false)
+    public function isIndisposable(string $email, bool $checkMx = false)
     {
         return $this->isNotDisposable($email, $checkMx);
     }
