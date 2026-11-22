@@ -27,6 +27,44 @@ class IndisposableTest extends TestCase
     }
 
     #[Test]
+    public function it_should_pass_for_non_email_strings()
+    {
+        $validator = new Indisposable;
+        $email = 'yopmail.com';
+
+        $this->assertTrue($validator->validate(null, $email, null, null));
+    }
+
+    #[Test]
+    public function it_should_validate_stringable_objects()
+    {
+        $validator = new Indisposable;
+
+        $this->assertTrue($validator->validate(null, new class {                
+            public function __toString()
+            {
+                return 'example@gmail.com';
+            }
+        }, null, null));
+        
+        $this->assertFalse($validator->validate(null, new class {                
+            public function __toString()
+            {
+                return 'example@yopmail.com';
+            }
+        }, null, null));
+    }
+
+    #[Test]
+    public function it_should_fail_for_unexpected_values()
+    {
+        $validator = new Indisposable;
+
+        $this->assertFalse($validator->validate(null, ['array'], null, null));
+        $this->assertFalse($validator->validate(null, "foo@yopmail.com\nbar@yopmail.com", null, null));
+    }
+
+    #[Test]
     public function it_is_usable_through_the_validator()
     {
         $passingValidation = $this->app['validator']->make(['email' => 'example@gmail.com'], ['email' => 'indisposable']);

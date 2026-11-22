@@ -24,8 +24,16 @@ class Indisposable
      */
     public function validate($attribute, $value, $parameters, $validator)
     {
+        if (! is_string($value) && ! (is_object($value) && method_exists($value, '__toString'))) {
+            return false;
+        }
+
+        if (preg_match('/[\r\n]/', (string) $value) > 0) {
+            return false;
+        }
+        
         return DisposableDomains::isNotDisposable(
-            $value,
+            (string) $value,
             checkMx: in_array('mx', $parameters ?? [], true)
         );
     }

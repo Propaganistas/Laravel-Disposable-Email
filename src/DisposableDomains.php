@@ -184,14 +184,16 @@ class DisposableDomains
      * @param  bool  $checkMx
      * @return bool
      */
-    public function isDisposable($email, bool $checkMx = false)
+    public function isDisposable(string $email, bool $checkMx = false)
     {
-        $domain = Str::lower(Arr::get(explode('@', $email, 2), 1));
+        $domain = Arr::get(explode('@', $email, 2), 1);
 
         if (! $domain) {
             // Just ignore this validator if the value doesn't even resemble an email or domain.
             return false;
         }
+
+        $domain = Str::lower($domain);
 
         foreach ($this->candidateDomains($domain, $checkMx) as $candidate) {
             if (in_array($candidate, $this->domains)) {
@@ -270,7 +272,7 @@ class DisposableDomains
      * @param  bool  $checkMx
      * @return bool
      */
-    public function isNotDisposable($email, bool $checkMx = false)
+    public function isNotDisposable(string $email, bool $checkMx = false)
     {
         return ! $this->isDisposable($email, $checkMx);
     }
@@ -282,7 +284,7 @@ class DisposableDomains
      * @param  bool  $checkMx
      * @return bool
      */
-    public function isIndisposable($email, bool $checkMx = false)
+    public function isIndisposable(string $email, bool $checkMx = false)
     {
         return $this->isNotDisposable($email, $checkMx);
     }
