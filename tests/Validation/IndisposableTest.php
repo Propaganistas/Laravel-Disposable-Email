@@ -40,14 +40,14 @@ class IndisposableTest extends TestCase
     {
         $validator = new Indisposable;
 
-        $this->assertTrue($validator->validate(null, new class($email) {                
+        $this->assertTrue($validator->validate(null, new class {                
             public function __toString()
             {
                 return 'example@gmail.com';
             }
         }, null, null));
         
-        $this->assertFalse($validator->validate(null, new class($email) {                
+        $this->assertFalse($validator->validate(null, new class {                
             public function __toString()
             {
                 return 'example@yopmail.com';
