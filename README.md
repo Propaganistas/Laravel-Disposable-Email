@@ -22,11 +22,11 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
     php artisan vendor:publish --tag=laravel-disposable-email
     ```
 
-3. (optional) In your languages directory, add for each language an extra language line for the validator:
+3. In your languages directory, add an extra translation in every `validation.php` language file:
 
-    ```php
-    'indisposable' => 'Disposable email addresses are not allowed.',
-    ```
+   ```php
+   'indisposable' => 'Disposable email addresses are not allowed.',
+   ```
 
 4. (optional) This package receives a **weekly** patch release containing updates to the built-in disposable domains list. If you are not able to bump your installed version accordingly, or just want to stay ahead of things, make sure to update the domains list yourself at any interval you like by running or scheduling the `disposable:update` command: 
 
@@ -39,10 +39,11 @@ Uses the disposable domains blacklist from [disposable/disposable](https://githu
     ```
 ### Usage
 
-Use the `indisposable` validator to ensure a given field doesn't hold a disposable email address. You'll probably want to add it after the `email` validator to make sure a valid email is passed through:
+Use the `indisposable` validator or the `Indisposable` rule object to ensure a given field doesn't hold a disposable email address. The validator will reject anything that doesn't look like a valid email address, so you should combine it with the `email` rule:
 
 ```php
-'field' => ['email','indisposable'],
+'field' => ['email', 'indisposable'],
+// 'field' => ['email', new Indisposable],
 ```
 
 ### MX record inspection
@@ -54,12 +55,25 @@ Enabling MX inspection closes that gap: the validator resolves the domain's MX r
 Simply opt in by specifying the `mx` parameter:
 
 ```php
-'field' => ['email','indisposable:mx'],
+'field' => ['email', 'indisposable:mx'],
+// 'field' => ['email', (new Indisposable)->inspectMxRecords()],
 ```
 
 > **Note:** this performs a live DNS lookup during validation, trading a little latency for broader coverage. Leave off the `mx` parameter if your validation path must stay strictly offline.
 
+### Configuration
+
+The published `config/disposable-email.php` file allows you to customize:
+
+- `sources`: URLs returning JSON arrays of domains. `disposable:update` fetches and combines all sources.
+- `storage`: the writable path for the updated list. The bundled list is used if this file does not exist.
+- `whitelist`: exact domains to remove from the disposable list.
+- `include_subdomains`: also reject email subdomains of listed domains; disabled by default.
+- `cache`: enable or disable caching and configure the cache store and key. The list is cached indefinitely by default.
+
+The whitelist is applied when loading the list from storage, not to an existing cached list. After changing it, clear the configured domain cache so the list is reloaded.
+
 ### Custom fetches
 
 By default the package retrieves a new list by using `file_get_contents()`. 
-If your application has different needs (e.g. when behind a proxy) please review the `disposable-email.fetcher` configuration value.
+If your application has different needs (e.g. when behind a proxy), set `disposable-email.fetcher` to a class implementing `Propaganistas\LaravelDisposableEmail\Contracts\Fetcher`. Its `handle($url)` method must return an array of domains.

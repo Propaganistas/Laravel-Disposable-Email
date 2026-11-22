@@ -2,39 +2,52 @@
 
 namespace Propaganistas\LaravelDisposableEmail\Validation;
 
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Validator;
 use Propaganistas\LaravelDisposableEmail\Facades\DisposableDomains;
 
-class Indisposable
+class Indisposable implements ValidationRule
 {
     /**
-     * Default error message.
-     *
-     * @var string
+     * Whether MX record inspection should be enabled.
      */
-    public static $errorMessage = 'Disposable email addresses are not allowed.';
+    protected bool $inspectMxRecords = false;
 
     /**
-     * Validates whether an email address does not originate from a disposable email service.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @param  array  $parameters
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return bool
+     * Determine whether the given value is valid.
      */
-    public function validate($attribute, $value, $parameters, $validator)
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! is_string($value) && ! (is_object($value) && method_exists($value, '__toString'))) {
-            return false;
+        $isEmail = Validator::make([$attribute => $value], [$attribute => 'email']);
+
+        if ($isEmail->fails()) {
+            $fail($isEmail->errors()->first($attribute));
+            return;
         }
 
-        if (preg_match('/[\r\n]/', (string) $value) > 0) {
-            return false;
+        if (DisposableDomains::isDisposable((string) $value, checkMx: $this->inspectMxRecords)) {
+            $fail('validation.indisposable')->translate();
         }
-        
-        return DisposableDomains::isNotDisposable(
-            (string) $value,
-            checkMx: in_array('mx', $parameters ?? [], true)
-        );
+    }
+
+    public function inspectMxRecords(): static
+    {
+        $this->inspectMxRecords = true;
+
+        return $this;
+    }
+
+    public function setParameters($parameters): static
+    {
+        $parameters = is_array($parameters) ? $parameters : func_get_args();
+
+        foreach ($parameters as $parameter) {
+            if (strcasecmp('mx', $parameter) === 0) {
+                $this->inspectMxRecords();
+            }
+        }
+
+        return $this;
     }
 }

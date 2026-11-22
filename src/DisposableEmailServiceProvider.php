@@ -4,6 +4,7 @@ namespace Propaganistas\LaravelDisposableEmail;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Factory;
+use Illuminate\Validation\InvokableValidationRule;
 use Propaganistas\LaravelDisposableEmail\Console\UpdateDisposableDomainsCommand;
 use Propaganistas\LaravelDisposableEmail\Validation\Indisposable;
 
@@ -32,7 +33,11 @@ class DisposableEmailServiceProvider extends ServiceProvider
         ], 'laravel-disposable-email');
 
         $this->callAfterResolving('validator', function (Factory $validator) {
-            $validator->extend('indisposable', Indisposable::class.'@validate', Indisposable::$errorMessage);
+            $validator->extend('indisposable', function ($attribute, $value, $parameters, $validator) {
+                return InvokableValidationRule::make(
+                    (new Indisposable)->setParameters($parameters)
+                )->setValidator($validator)->passes($attribute, $value);
+            });
         });
     }
 
